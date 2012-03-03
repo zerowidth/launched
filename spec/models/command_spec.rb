@@ -3,6 +3,10 @@ require 'spec_helper'
 describe Command do
   subject { Command.new :name => "a command", :command => "ls -la" }
 
+  it "can be initialized with nil" do
+    lambda { Command.new nil }.should_not raise_error
+  end
+
   it "is valid" do
     subject.should be_valid
   end

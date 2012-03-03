@@ -1,0 +1,111 @@
+<div class="row">
+  <div class="span12">
+    <%= form_tag plists_path, :id => "plist", :class => "form-horizontal" do |f| %>
+
+      <div class="control-group">
+        <%= label_tag :label, "Name", :class => "control-label" %>
+        <div class="controls">
+          <div class="input-prepend">
+            <%= text_field_tag :label %>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <%= label_tag :command, "Command", :class => "control-label" %>
+        <div class="controls">
+          <div class="input-prepend">
+            <span class="add-on">sh -c</span>
+            <%= text_field_tag :command, "", :class => "span6" %>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Schedule</label>
+        <div class="controls well">
+          <div class="control-group">
+            <label class="control-label">Minute</label>
+            <div class="controls">
+              <input type="text" name="minute" value="" class="span1" />
+              <span class="help-inline">Cron syntax: blank, <code>*</code>, or e.g. <code>0</code>, <code>0,30</code>, <code>*/5</code></span>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Hour</label>
+            <div class="controls">
+              <input type="text" name="hour" value="" class="span1" />
+              <span class="help-inline">Cron syntax, <code>0-23</code></span>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Day of Month</label>
+            <div class="controls">
+              <input type="text" name="day_of_month" value="" class="span1" />
+              <span class="help-inline">Cron syntax: <code>1-31</code>, <code>1,15</code>, etc.</span>
+            </div>
+          </div>
+          <div class="control-group">
+            <label class="control-label">Weekday</label>
+            <div class="controls">
+              <div class="btn-group" data-toggle="buttons-checkbox">
+                <a href="#" class="btn">Sun</a>
+                <a href="#" class="btn">Mon</a>
+                <a href="#" class="btn">Tue</a>
+                <a href="#" class="btn">Wed</a>
+                <a href="#" class="btn">Thu</a>
+                <a href="#" class="btn">Fri</a>
+                <a href="#" class="btn">Sat</a>
+              </div>
+              <%= hidden_field_tag :weekday_list %>
+              <span class="help-inline">None selected means "all".</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Month</label>
+            <div class="controls">
+              <div class="btn-group" data-toggle="buttons-checkbox">
+                <a href="#" class="btn">Jan</a>
+                <a href="#" class="btn">Feb</a>
+                <a href="#" class="btn">Mar</a>
+                <a href="#" class="btn">Apr</a>
+                <a href="#" class="btn">May</a>
+                <a href="#" class="btn">Jun</a>
+                <a href="#" class="btn">Jul</a>
+                <a href="#" class="btn">Aug</a>
+                <a href="#" class="btn">Sep</a>
+                <a href="#" class="btn">Oct</a>
+                <a href="#" class="btn">Nov</a>
+                <a href="#" class="btn">Dec</a>
+              </div>
+              <%= hidden_field_tag :month_list %>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Run interval</label>
+            <div class="controls">
+              <%= text_field_tag :interval, "", :class => "span1" %>
+              <span class="help-inline">Run at this interval (seconds)</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Run at load</label>
+            <div class="controls">
+                <input type="checkbox" name="run_at_load" value="" />
+                <span class="help-inline">Runs once on the system when loaded (including at boot)</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Create .plist</button>
+      </div>
+
+    <% end -%>
+  </div>
+</div>
