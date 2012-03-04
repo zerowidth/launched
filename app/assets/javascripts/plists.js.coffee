@@ -26,7 +26,7 @@ $.validator.addMethod "cron_range", cronRange, $.format "Digits must be between 
 
 $ ->
   $('#plist').button()
-  $('#plist #label').focus().select()
+  $('#plist_name').focus().select()
 
   $('#plist .btn-group .btn').click (event) ->
     buttons = $(this).parent('.btn-group').children('.btn')
@@ -37,7 +37,10 @@ $ ->
     else
       selected = (i for element, i in buttons when $(element).hasClass("active") or element is this)
 
-    $(this).closest('.controls').find('input').val selected.join(",")
+    input = $(this).closest('.controls').find('input')
+    if input.attr('id') is "plist_month_list"
+      selected = (m + 1 for m in selected)
+    input.val selected.join(",")
 
     event.preventDefault()
 
@@ -62,16 +65,16 @@ $ ->
         group.removeClass('error').addClass('success')
 
     rules:
-      label: "required"
-      command: "required"
-      interval: "digits"
-      minute:
+      "plist[name]": "required"
+      "plist[command]": "required"
+      "plist[interval]": "digits"
+      "plist[minute]":
         cron: true
         cron_range: [0, 59]
-      hour:
+      "plist[hour]":
         cron: true
         cron_range: [0, 23]
-      day_of_month:
+      "plist[day_of_month]":
         cron: true
         cron_range: [1, 31]
 

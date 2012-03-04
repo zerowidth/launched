@@ -1,0 +1,104 @@
+<div class="row">
+  <div class="span12">
+    <%= form_for @plist, :as => :plist, :url => plists_path, :html => {:id => "plist", :class => "form-horizontal"} do |f| %>
+
+      <div class="control-group">
+        <%= f.label :name, "Name", :class => "control-label" %>
+        <div class="controls">
+          <div class="input-prepend">
+            <%= f.text_field :name %>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <%= f.label :command, "Command", :class => "control-label" %>
+        <div class="controls">
+          <div class="input-prepend">
+            <span class="add-on">sh -c</span>
+            <%= f.text_field :command, :class => "span6" %>
+          </div>
+        </div>
+      </div>
+
+      <div class="control-group">
+        <label class="control-label">Schedule</label>
+        <div class="controls well">
+
+          <div class="control-group">
+            <%= f.label :minute, :class => "control-label" %>
+            <div class="controls">
+              <%= f.text_field :minute, :class => "span1" %>
+              <span class="help-inline">Cron syntax: <code>*</code>, or e.g. <code>0</code>, <code>0,30</code>, <code>*/5</code></span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <%= f.label :hour, :class => "control-label" %>
+            <div class="controls">
+              <%= f.text_field :hour, :class => "span1" %>
+              <span class="help-inline">Cron syntax, <code>0-23</code></span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <%= f.label :day_of_month, "Day of Month", :class => "control-label" %>
+            <div class="controls">
+              <%= f.text_field :day_of_month, :class => "span1" %>
+              <span class="help-inline">Cron syntax: <code>1-31</code>, <code>1,15</code>, etc.</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Weekday</label>
+            <div class="controls">
+              <div class="btn-group" data-toggle="buttons-checkbox">
+                <% Date::ABBR_DAYNAMES.each.with_index do |day, i| -%>
+                  <a href="#" class="btn <%= "active" if @plist.weekdays.include? i %>"><%= day %></a>
+                <% end -%>
+              </div>
+              <%= hidden_field_tag :weekday_list %>
+              <span class="help-inline">None selected implies "all".</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <label class="control-label">Month</label>
+            <div class="controls">
+              <div class="btn-group" data-toggle="buttons-checkbox">
+                <% Date::ABBR_MONTHNAMES.each.with_index do |month, i| -%>
+                  <% next unless month # 0 is nil -%>
+                  <a href="#" class="btn <%= "active" if @plist.months.include? i %>"><%= month %></a>
+                <% end -%>
+              </div>
+              <%= f.text_field :month_list %>
+              <span class="help-inline">None selected implies "all".</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <%= f.label :interval, "Run Interval", :class => "control-label" %>
+            <div class="controls">
+              <%= f.text_field :interval, :class => "span1" %>
+              <span class="help-inline">Run at this interval (seconds)</span>
+            </div>
+          </div>
+
+          <div class="control-group">
+            <%= f.label :run_at_load, :class => "control-label" %>
+            <div class="controls">
+              <%= f.check_box :run_at_load %>
+              <span class="help-inline">Runs once on the system when loaded (including at boot)</span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="form-actions">
+        <button type="submit" class="btn btn-primary">Create .plist</button>
+      </div>
+
+    <% end -%>
+  </div>
+</div>

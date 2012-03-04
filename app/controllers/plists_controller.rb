@@ -1,5 +1,6 @@
 class PlistsController < ApplicationController
-  def index
+  def new
+    @plist = LaunchdPlist.new
   end
 
   def create
