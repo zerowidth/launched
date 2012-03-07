@@ -35,7 +35,7 @@ describe LaunchdPlist do
 
     it "accepts a list of months as a string" do
       plist.month_list = "2,3,4"
-      plist.months = [1,4,7,10]
+      plist.months.should == [2,3,4]
     end
   end
 
