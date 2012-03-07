@@ -26,6 +26,7 @@ $.validator.addMethod "cron_range", cronRange, $.format "Digits must be between 
 
 $ ->
   $('#plist').button()
+
   $('#plist_name').focus().select()
 
   $('#plist .btn-group .btn').click (event) ->
@@ -43,7 +44,6 @@ $ ->
     input.val selected.join(",")
 
     event.preventDefault()
-
 
   $('#plist').validate
     errorElement: "span"
