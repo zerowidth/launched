@@ -4,5 +4,7 @@ class PlistsController < ApplicationController
   end
 
   def create
+    plist = LaunchdPlist.new params[:plist]
+    render :xml => LaunchdSerializer.new(plist).to_plist
   end
 end

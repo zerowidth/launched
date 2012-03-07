@@ -1,6 +1,6 @@
 <div class="row">
   <div class="span12">
-    <%= form_for @plist, :as => :plist, :url => plists_path, :html => {:id => "plist", :class => "form-horizontal"} do |f| %>
+    <%= form_for @plist, :as => :plist, :url => plists_path(:format => :xml), :html => {:id => "plist", :class => "form-horizontal"} do |f| %>
 
       <div class="control-group">
         <%= f.label :name, "Name", :class => "control-label" %>
@@ -71,7 +71,7 @@
                   <a href="#" class="btn <%= "active" if @plist.months.include? i %>"><%= month %></a>
                 <% end -%>
               </div>
-              <%= f.text_field :month_list %>
+              <%= f.hidden_field :month_list %>
               <span class="help-inline">None selected implies "all".</span>
             </div>
           </div>
@@ -88,7 +88,7 @@
             <%= f.label :run_at_load, :class => "control-label" %>
             <div class="controls">
               <%= f.check_box :run_at_load %>
-              <span class="help-inline">Runs once on the system when loaded (including at boot)</span>
+              <span class="help-inline">Runs once when loaded (including at boot)</span>
             </div>
           </div>
 
