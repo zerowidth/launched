@@ -39,4 +39,33 @@ describe LaunchdPlist do
     end
   end
 
+  describe "interval" do
+    it "sets the interval to an integer when assigned a string" do
+      plist.interval = "300"
+      plist.interval.should == 300
+    end
+
+    it "sets the interval to nil when assigned an empty string" do
+      plist.interval = ""
+      plist.interval.should == nil
+    end
+  end
+
+  describe "run at load" do
+    it "is false when a blank string is assigned" do
+      plist.run_at_load = ""
+      plist.run_at_load.should == false
+    end
+
+    it "is false when a '0' is assigned" do
+      plist.run_at_load = "0"
+      plist.run_at_load.should == false
+    end
+
+    it "is true when a '1' is assigned" do
+      plist.run_at_load = "1"
+      plist.run_at_load.should == true
+    end
+  end
+
 end

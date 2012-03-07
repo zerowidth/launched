@@ -1,7 +1,5 @@
 require "spec_helper"
 
-require "crontab_expression"
-
 describe LaunchdSerializer do
 
   let :plist do
@@ -51,6 +49,20 @@ describe LaunchdSerializer do
           {"Minute" => 0, "Hour" => 8},
           {"Minute" => 0, "Hour" => 17}
         ]
+      end
+    end
+
+    context "with a run interval" do
+      it "sets the StartInterval key" do
+        plist.interval = 300
+        xml["StartInterval"].should == 300
+      end
+    end
+
+    context "with run at load set" do
+      it "sets the RunAtLoad boolean" do
+        plist.run_at_load = true
+        xml["RunAtLoad"].should == true
       end
     end
   end

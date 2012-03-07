@@ -15,8 +15,17 @@ class LaunchdSerializer
     {}.tap do |attrs|
       attrs["Label"] = Launched::Application::DOMAIN + "." + plist.label
       attrs["ProgramArguments"] = [ "sh", "-c", plist.command]
+
       if intervals = calendar_intervals
         attrs["StartCalendarInterval"] = calendar_intervals
+      end
+
+      if plist.interval
+        attrs["StartInterval"] = plist.interval
+      end
+
+      if plist.run_at_load
+        attrs["RunAtLoad"] = true
       end
     end
   end

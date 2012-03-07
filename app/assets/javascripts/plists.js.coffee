@@ -67,7 +67,9 @@ $ ->
     rules:
       "plist[name]": "required"
       "plist[command]": "required"
-      "plist[interval]": "digits"
+      "plist[interval]":
+        digits: true
+        min: 1
       "plist[minute]":
         cron: true
         cron_range: [0, 59]

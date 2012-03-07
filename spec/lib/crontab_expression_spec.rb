@@ -1,7 +1,5 @@
 require "spec_helper"
 
-require "crontab_expression"
-
 describe CrontabExpression do
 
   def intervals(expr)
