@@ -38,7 +38,7 @@ $ ->
     else
       selected = (i for element, i in buttons when $(element).hasClass("active") or element is this)
 
-    input = $(this).closest('.controls').find('input')
+    input = $(this).closest('.control-group').find('input')
     if input.attr('id') is "plist_month_list"
       selected = (m + 1 for m in selected)
     input.val selected.join(",")
