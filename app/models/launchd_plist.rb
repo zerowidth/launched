@@ -3,6 +3,7 @@ class LaunchdPlist
   attr_accessor :command, :name
   attr_accessor :minute, :hour, :day_of_month, :weekdays, :months
   attr_reader :interval, :run_at_load, :launch_only_once
+  attr_accessor :user, :group, :root_directory, :working_directory
 
   def initialize(attributes={})
     attributes.each do |k, v|

@@ -20,17 +20,13 @@ class LaunchdSerializer
         attrs["StartCalendarInterval"] = calendar_intervals
       end
 
-      if plist.interval
-        attrs["StartInterval"] = plist.interval
-      end
-
-      if plist.run_at_load
-        attrs["RunAtLoad"] = true
-      end
-
-      if plist.launch_only_once
-        attrs["LaunchOnlyOnce"] = true
-      end
+      attrs["StartInterval"] = plist.interval if plist.interval
+      attrs["RunAtLoad"] = true if plist.run_at_load
+      attrs["LaunchOnlyOnce"] = true if plist.launch_only_once
+      attrs["UserName"] = plist.user if plist.user
+      attrs["GroupName"] = plist.group if plist.group
+      attrs["RootDirectory"] = plist.root_directory if plist.root_directory
+      attrs["WorkingDirectory"] = plist.working_directory if plist.working_directory
     end
   end
 

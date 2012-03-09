@@ -82,6 +82,34 @@ describe LaunchdSerializer do
         xml["LaunchOnlyOnce"].should == true
       end
     end
+
+    context "when a user is set" do
+      it "sets UserName" do
+        plist.user = "bobby"
+        xml["UserName"].should == "bobby"
+      end
+    end
+
+    context "when a group is set" do
+      it "sets GroupName" do
+        plist.group = "wheel"
+        xml["GroupName"].should == "wheel"
+      end
+    end
+
+    context "with a root directory set" do
+      it "sets RootDirectory" do
+        plist.root_directory = "/tmp"
+        xml["RootDirectory"].should == "/tmp"
+      end
+    end
+
+    context "with a working directory set" do
+      it "sets WorkingDirectory" do
+        plist.working_directory = "/tmp"
+        xml["WorkingDirectory"].should == "/tmp"
+      end
+    end
   end
 
 end
