@@ -2,7 +2,7 @@ class LaunchdPlist
 
   attr_accessor :command, :name
   attr_accessor :minute, :hour, :day_of_month, :weekdays, :months
-  attr_reader :interval, :run_at_load
+  attr_reader :interval, :run_at_load, :launch_only_once
 
   def initialize(attributes={})
     attributes.each do |k, v|
@@ -18,6 +18,10 @@ class LaunchdPlist
 
   def run_at_load=(value)
     @run_at_load = value == "1" || value == true
+  end
+
+  def launch_only_once=(value)
+    @launch_only_once = value == "1" || value == true
   end
 
   def label

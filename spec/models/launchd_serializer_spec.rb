@@ -75,6 +75,13 @@ describe LaunchdSerializer do
         xml["RunAtLoad"].should == true
       end
     end
+
+    context "when the plist is safe to launch only once" do
+      it "sets LaunchOnlyOnce to true" do
+        plist.launch_only_once = true
+        xml["LaunchOnlyOnce"].should == true
+      end
+    end
   end
 
 end

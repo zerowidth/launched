@@ -68,4 +68,21 @@ describe LaunchdPlist do
     end
   end
 
+  describe "launch only once" do
+    it "is false when a blank string is assigned" do
+      plist.launch_only_once = ""
+      plist.launch_only_once.should == false
+    end
+
+    it "is false when a '0' is assigned" do
+      plist.launch_only_once = "0"
+      plist.launch_only_once.should == false
+    end
+
+    it "is true when a '1' is assigned" do
+      plist.launch_only_once = "1"
+      plist.launch_only_once.should == true
+    end
+  end
+
 end

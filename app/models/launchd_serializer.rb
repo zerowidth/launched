@@ -27,6 +27,10 @@ class LaunchdSerializer
       if plist.run_at_load
         attrs["RunAtLoad"] = true
       end
+
+      if plist.launch_only_once
+        attrs["LaunchOnlyOnce"] = true
+      end
     end
   end
 
