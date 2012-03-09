@@ -35,12 +35,18 @@ class LaunchdSerializer
       :minute => plist.minute,
       :hour => plist.hour,
       :day => plist.day_of_month,
-      :weekday => plist.weekday_list,
+      :day_of_week => plist.weekday_list,
       :month => plist.month_list
     )
 
     intervals = crontab_expression.intervals.map do |i|
-      capitalized = i.map { |k,v| [k.capitalize, v] }
+      capitalized = i.map do |k,v|
+        if k.to_s == "day_of_week"
+          ["Weekday", v]
+        else
+          [k.capitalize, v]
+        end
+      end
       Hash[capitalized]
     end
 

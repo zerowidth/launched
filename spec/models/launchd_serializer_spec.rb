@@ -52,6 +52,16 @@ describe LaunchdSerializer do
       end
     end
 
+    context "with a weekday list specified" do
+      it "sets the weekdays to run" do
+        plist.weekday_list = "1,5"
+        xml["StartCalendarInterval"].should == [
+          {"Weekday" => 1},
+          {"Weekday" => 5}
+        ]
+      end
+    end
+
     context "with a run interval" do
       it "sets the StartInterval key" do
         plist.interval = 300
