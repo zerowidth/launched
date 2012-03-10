@@ -30,12 +30,31 @@ describe PlistsController do
       LaunchdPlist.create! :name => "test", :command => "ls", :interval => "300"
     end
 
-    before do
-      get :show, :id => plist.uuid
+    context "when requesting xml" do
+      before do
+        get :show, :id => plist.uuid, :format => :xml
+      end
+
+      it "renders an xml plist with the xml format" do
+        response.body.should =~ /xml.*StartInterval/m
+      end
+
+      it "sets the content-disposition header" do
+        response.headers["Content-Disposition"].should =~ /attachment.*test\.xml/
+      end
     end
 
-    it "renders an xml plist" do
-      response.body.should =~ /xml.*StartInterval/m
+    it "renders html with the html format" do
+      get :show, :id => plist.uuid
+      response.should be_success
+      response.should render_template("show")
     end
+
+    it "raises a record not found error for invalid ids" do
+      lambda do
+        get :show, :id => 'lol'
+      end.should raise_error(ActiveRecord::RecordNotFound)
+    end
+
   end
 end
