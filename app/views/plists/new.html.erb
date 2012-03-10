@@ -152,8 +152,17 @@
 
     <div class="form-actions">
       <div class="pull-right">
-        <button type="submit" class="btn btn-primary">Create .plist</button>
+        <button type="submit" class="btn btn-success">
+          <i class="icon-ok icon-white"></i>
+          Create .plist
+        </button>
       </div>
+      <% unless @plist.new_record? -%>
+        <p>
+          <span class="label label-warning">Notice</span>
+          For security, editing a .plist creates a new, different entry.
+        </p>
+      <% end -%>
     </div>
 
     <% end -%>

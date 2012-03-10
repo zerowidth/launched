@@ -27,4 +27,9 @@ class PlistsController < ApplicationController
       format.html
     end
   end
+
+  def edit
+    @plist = LaunchdPlist.find_by_uuid(params[:id]) or raise ActiveRecord::RecordNotFound
+    render :action => "new"
+  end
 end

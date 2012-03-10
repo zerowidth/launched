@@ -1,6 +1,8 @@
 <h2><%= @plist.name %></h2>
 <p class="pull-right">
+  <%= link_to "edit", edit_plist_path(@plist.uuid) %> or
   <%= link_to "download", plist_path(@plist.uuid, :format => :xml) %>
 </p>
 <p><code><%= @plist.command %></code></p>
+
 <p><pre><code><%= @plist_xml %></code></pre></p>

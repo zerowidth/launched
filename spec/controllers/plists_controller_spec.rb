@@ -1,6 +1,11 @@
 require 'spec_helper'
 
 describe PlistsController do
+
+  let :plist do
+    LaunchdPlist.create! :name => "test", :command => "ls", :interval => "300"
+  end
+
   describe "POST to create" do
 
     def create(overrides={})
@@ -25,10 +30,6 @@ describe PlistsController do
   end
 
   describe "GET to show with a UUID" do
-
-    let :plist do
-      LaunchdPlist.create! :name => "test", :command => "ls", :interval => "300"
-    end
 
     context "when requesting xml" do
       before do
@@ -56,5 +57,23 @@ describe PlistsController do
       end.should raise_error(ActiveRecord::RecordNotFound)
     end
 
+  end
+
+  describe "GET to edit with a UUID" do
+    it "is succesful" do
+      get :edit, :id => plist.uuid
+      response.should be_success
+    end
+
+    it "renders the new plist form" do
+      get :edit, :id => plist.uuid
+      response.should render_template("new")
+    end
+
+    it "raises a record not found error for invalid ids" do
+      lambda do
+        get :edit, :id => 'lol'
+      end.should raise_error(ActiveRecord::RecordNotFound)
+    end
   end
 end
