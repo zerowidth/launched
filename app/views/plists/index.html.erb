@@ -1,0 +1,10 @@
+<% if @plists.empty? -%>
+  <p>No plists yet.<p><% else -%>
+  <ul>
+    <% for plist in @plists -%>
+      <li><%= link_to plist.name, plist_path(plist.uuid) %> <code><%= plist.command %></code></li>
+    <% end -%>
+  </ul>
+<% end -%>
+<p><%= link_to %Q(<i class="icon-plus-sign icon-white"></i> New plist).html_safe, new_plist_path, :class => "btn btn-success" %></p>
+

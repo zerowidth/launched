@@ -1,4 +1,9 @@
 class PlistsController < ApplicationController
+
+  def index
+    @plists = LaunchdPlist.all
+  end
+
   def new
     @plist = LaunchdPlist.new
   end
