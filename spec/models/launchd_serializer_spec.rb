@@ -54,7 +54,7 @@ describe LaunchdSerializer do
 
     context "with a weekday list specified" do
       it "sets the weekdays to run" do
-        plist.weekday_list = "1,5"
+        plist.weekdays = "1,5"
         xml["StartCalendarInterval"].should == [
           {"Weekday" => 1},
           {"Weekday" => 5}
@@ -88,12 +88,22 @@ describe LaunchdSerializer do
         plist.user = "bobby"
         xml["UserName"].should == "bobby"
       end
+
+      it "does not set UserName when user is an empty string" do
+        plist.user = ""
+        xml["UserName"].should == nil
+      end
     end
 
     context "when a group is set" do
       it "sets GroupName" do
         plist.group = "wheel"
         xml["GroupName"].should == "wheel"
+      end
+
+      it "does not set GroupName with an empty string" do
+        plist.group = ""
+        xml["GroupName"].should == nil
       end
     end
 
@@ -102,12 +112,22 @@ describe LaunchdSerializer do
         plist.root_directory = "/tmp"
         xml["RootDirectory"].should == "/tmp"
       end
+
+      it "deos not set RootDirectory when root directory is a blank string" do
+        plist.root_directory = ""
+        xml["RootDirectory"].should == nil
+      end
     end
 
     context "with a working directory set" do
       it "sets WorkingDirectory" do
         plist.working_directory = "/tmp"
         xml["WorkingDirectory"].should == "/tmp"
+      end
+
+      it "does not set WorkingDirectory when working directory is a blank string" do
+        plist.working_directory = ""
+        xml["WorkingDirectory"].should == nil
       end
     end
   end

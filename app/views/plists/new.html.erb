@@ -57,10 +57,10 @@
               <label>Weekday</label>
               <div class="btn-group" data-toggle="buttons-checkbox">
                 <% Date::ABBR_DAYNAMES.each.with_index do |day, i| -%>
-                  <a href="#" class="btn <%= "active" if @plist.weekdays.include? i %>"><%= day %></a>
+                  <a href="#" class="btn <%= "active" if @plist.weekday_list.include? i %>"><%= day %></a>
                 <% end -%>
               </div>
-              <%= f.hidden_field :weekday_list %>
+              <%= f.hidden_field :weekdays %>
               <span class="help-inline">None selected implies "all".</span>
             </div>
 
@@ -70,10 +70,10 @@
                 <div class="btn-group" data-toggle="buttons-checkbox">
                   <% Date::ABBR_MONTHNAMES.each.with_index do |month, i| -%>
                     <% next unless month # 0 is nil -%>
-                    <a href="#" class="btn <%= "active" if @plist.months.include? i %>"><%= month %></a>
+                    <a href="#" class="btn <%= "active" if @plist.month_list.include? i %>"><%= month %></a>
                   <% end -%>
                 </div>
-                <%= f.hidden_field :month_list %>
+                <%= f.hidden_field :months %>
                 <span class="help-inline">None selected implies "all".</span>
               </div>
             </div>

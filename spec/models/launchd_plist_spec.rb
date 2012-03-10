@@ -6,9 +6,20 @@ describe LaunchdPlist do
     LaunchdPlist.new(
       :name => "Hello World",
       :command => 'growlnotify -m "hello!"',
-      :weekdays => [1,2,3,4,5],
-      :months => [1,4,7,10]
+      :weekdays => "1,2,3,4,5",
+      :months => "1,4,7,10"
     )
+  end
+
+  describe "when saving to the database" do
+    it "creates a record in the db" do
+      lambda { plist.save! }.should change(LaunchdPlist, :count).by(1)
+    end
+
+    it "generates a UUID for the plist" do
+      plist.save!
+      plist.uuid.should_not be_nil
+    end
   end
 
   describe "#label" do
@@ -17,71 +28,25 @@ describe LaunchdPlist do
     end
   end
 
+  describe "#month_list" do
+    it "returns an integer array of months" do
+      plist.month_list.should == [1,4,7,10]
+    end
+
+    it "returns an empty array when months is nil" do
+      plist.months = nil
+      plist.month_list.should == []
+    end
+  end
+
   describe "weekday_list" do
-    it "returns a string listing the selected weekdays" do
-      plist.weekday_list.should == "1,2,3,4,5"
+    it "returns an integer array of weekdays" do
+      plist.weekday_list.should == [1,2,3,4,5]
     end
 
-    it "accepts a list of weekdays as a string" do
-      plist.weekday_list = "2,3,4"
-      plist.weekdays.should == [2,3,4]
-    end
-  end
-
-  describe "month_list" do
-    it "returns a string listing the selected months" do
-      plist.month_list.should == "1,4,7,10"
-    end
-
-    it "accepts a list of months as a string" do
-      plist.month_list = "2,3,4"
-      plist.months.should == [2,3,4]
-    end
-  end
-
-  describe "interval" do
-    it "sets the interval to an integer when assigned a string" do
-      plist.interval = "300"
-      plist.interval.should == 300
-    end
-
-    it "sets the interval to nil when assigned an empty string" do
-      plist.interval = ""
-      plist.interval.should == nil
-    end
-  end
-
-  describe "run at load" do
-    it "is false when a blank string is assigned" do
-      plist.run_at_load = ""
-      plist.run_at_load.should == false
-    end
-
-    it "is false when a '0' is assigned" do
-      plist.run_at_load = "0"
-      plist.run_at_load.should == false
-    end
-
-    it "is true when a '1' is assigned" do
-      plist.run_at_load = "1"
-      plist.run_at_load.should == true
-    end
-  end
-
-  describe "launch only once" do
-    it "is false when a blank string is assigned" do
-      plist.launch_only_once = ""
-      plist.launch_only_once.should == false
-    end
-
-    it "is false when a '0' is assigned" do
-      plist.launch_only_once = "0"
-      plist.launch_only_once.should == false
-    end
-
-    it "is true when a '1' is assigned" do
-      plist.launch_only_once = "1"
-      plist.launch_only_once.should == true
+    it "returns an empty array when weekdays is nil" do
+      plist.weekdays = nil
+      plist.weekday_list.should == []
     end
   end
 
