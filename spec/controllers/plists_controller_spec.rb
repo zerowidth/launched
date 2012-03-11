@@ -10,7 +10,6 @@ describe PlistsController do
 
     def create(overrides={})
       post :create,
-        :format => :xml,
         :plist => {
           :name => "test command",
           :command => "echo hello",
@@ -21,7 +20,7 @@ describe PlistsController do
     it "redirects to the new plist path, using uuid as the id" do
       create
       plist = LaunchdPlist.last
-      response.should redirect_to(plist_path(plist.uuid, :format => :xml))
+      response.should redirect_to(plist_path(plist.uuid))
     end
 
     it "creates a launchd plist entry" do

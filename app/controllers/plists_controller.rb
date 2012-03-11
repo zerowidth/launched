@@ -10,7 +10,7 @@ class PlistsController < ApplicationController
     @plist = LaunchdPlist.new params[:plist]
 
     if @plist.save
-      redirect_to plist_path(@plist.uuid, :format => :xml)
+      redirect_to plist_path(@plist.uuid)
     else
       render :action => :new
     end
