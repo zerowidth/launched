@@ -1,8 +1,28 @@
-<h2><%= @plist.name %></h2>
+<h2><%= @plist.label %>.plist</h2>
 <p class="pull-right">
   <%= link_to "edit", edit_plist_path(@plist.uuid) %> or
   <%= link_to "download", plist_path(@plist.uuid, :format => :xml) %>
 </p>
-<p><code><%= @plist.command %></code></p>
 
-<p><pre><code><%= @plist_xml %></code></pre></p>
+<p><code><%= @plist.command %></code></p>
+<pre><code><%= @plist_xml %></code></pre>
+
+<% filename = Launched::Application::DOMAIN + "." + @plist.label + ".plist" -%>
+
+<p>
+  To install:
+  <code>curl <%= install_plist_url(@plist.uuid) %> | sh</code>
+  (<%= link_to "source", install_plist_path(@plist.uuid) %>)
+</p>
+
+<p>Manual install:</p>
+<pre><code>mkdir -p ~/Library/LaunchAgents
+curl -o ~/Library/LaunchAgents/<%= filename %>
+launchctl load -w ~/Library/LaunchAgents/<%= filename %>
+</code></pre>
+
+<p>Or, to install as root:</p>
+<pre><code>curl -o ~/Downloads/<%= filename %>
+sudo cp ~/Downloads/<%= filename %> /Library/LaunchDaemons
+sudo launchctl load -w /Library/LaunchDaemons/<%= filename %>
+</code></pre>

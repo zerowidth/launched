@@ -1,0 +1,6 @@
+<% filename = Launched::Application::DOMAIN + "." + @plist.label + ".plist" -%>
+echo downloading <%= filename %>...
+mkdir -p ~/Library/LaunchAgents
+curl -o ~/Library/LaunchAgents/<%= filename %>
+echo installing <%= filename %>...
+launchctl load -w ~/Library/LaunchAgents/<%= filename %>

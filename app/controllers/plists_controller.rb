@@ -1,5 +1,6 @@
 class PlistsController < ApplicationController
 
+  before_filter :find_plist_by_uuid, :only => [:show, :edit, :install]
 
   def new
     @plist = LaunchdPlist.new
@@ -16,7 +17,6 @@ class PlistsController < ApplicationController
   end
 
   def show
-    @plist = LaunchdPlist.find_by_uuid(params[:id]) or raise ActiveRecord::RecordNotFound
     @plist_xml = LaunchdSerializer.new(@plist).to_plist
 
     respond_to do |format|
@@ -31,7 +31,16 @@ class PlistsController < ApplicationController
   end
 
   def edit
-    @plist = LaunchdPlist.find_by_uuid(params[:id]) or raise ActiveRecord::RecordNotFound
     render :action => "new"
+  end
+
+  def install
+    render :template => "plists/install.txt"
+  end
+
+  protected
+
+  def find_plist_by_uuid
+    @plist = LaunchdPlist.find_by_uuid(params[:id]) or raise ActiveRecord::RecordNotFound
   end
 end

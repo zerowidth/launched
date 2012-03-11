@@ -76,4 +76,11 @@ describe PlistsController do
       end.should raise_error(ActiveRecord::RecordNotFound)
     end
   end
+
+  describe "GET to install with a UUID" do
+    it "is successful" do
+      get :install, :id => plist.uuid
+      response.should be_success
+    end
+  end
 end
