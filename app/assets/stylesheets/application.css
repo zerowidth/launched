@@ -12,3 +12,21 @@
  *= require_self
  *= require_tree .
 */
+
+footer {
+  border-top: 1px solid #E5E5E5;
+  margin-top: 45px;
+  padding: 20px 0 20px;
+  *zoom: 1;
+}
+footer:after {
+  clear: both;
+}
+footer:before, footer:after {
+  display: table;
+  content: "";
+}
+
+h3 {
+  margin: 1em 0;
+}
