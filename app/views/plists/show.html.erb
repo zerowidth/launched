@@ -2,23 +2,27 @@
   $(function(){ plist.show_init(); });
 </script>
 <h2><%= @plist.label %>.plist</h2>
+
+<h3>Install</h3>
+<p>
+  <code id="install">curl <%= install_plist_url(@plist.uuid) %> | sh</code>
+  <a href="#" title="copy to clipboard" class="install"><i class="icon-share"></i></a> |
+  <%= link_to "source", install_plist_path(@plist.uuid) %>
+</p>
+
+<h3>Your .plist</h3>
 <p class="pull-right">
   <a href="#" title="copy to clipboard" class="plist_xml"><i class="icon-share"></i></a> |
   <%= link_to "edit", edit_plist_path(@plist.uuid) %> |
   <%= link_to "download", plist_path(@plist.uuid, :format => :xml) %>
 </p>
 
-<p><code><%= @plist.command %></code></p>
-<pre><code id="plist_xml"><%= @plist_xml %></code></pre>
+<p><tt><%= @plist.label %>.plist</tt> running <code><%= @plist.command %></code>:</p>
+<pre id="plist_xml"><code><%= @plist_xml %></code></pre>
+
+<h3>Manual Install</h3>
 
 <% filename = Launched::Application::DOMAIN + "." + @plist.label + ".plist" -%>
-
-<p>
-  To install:
-  <code id="install">curl <%= install_plist_url(@plist.uuid) %> | sh</code>
-  <a href="#" title="copy to clipboard" class="install"><i class="icon-share"></i></a> |
-  <%= link_to "source", install_plist_path(@plist.uuid) %>
-</p>
 
 <p>Manual install:</p>
 <pre><code>mkdir -p ~/Library/LaunchAgents
