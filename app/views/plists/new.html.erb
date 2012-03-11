@@ -1,3 +1,6 @@
+<script type="text/javascript" charset="utf-8">
+  $(function(){ plist.form_init(); });
+</script>
 <div class="row">
   <div class="span12">
     <%= form_for @plist, :as => :plist, :url => plists_path(:format => :xml), :html => {:id => "plist", :class => "form-vertical"} do |f| %>

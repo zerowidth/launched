@@ -24,59 +24,73 @@ cronRange = (value, element, [min, max]) ->
 $.validator.addMethod "cron", cronValidator, "Must be a cron expression"
 $.validator.addMethod "cron_range", cronRange, $.format "Digits must be between {0} and {1}"
 
-$ ->
-  $('#plist').button()
+window.plist =
 
-  $('#plist_name').focus().select()
+  clipboard: (link_selector, content_selector) ->
+    $(link_selector).zclip(
+      path: "/flash/ZeroClipboard.swf"
+      copy: $(content_selector).text()
+      afterCopy: -> $(content_selector).effect 'highlight'
+    )
+    $(link_selector).tooltip()
 
-  $('#plist .btn-group .btn').click (event) ->
-    buttons = $(this).parent('.btn-group').children('.btn')
+  show_init: ->
+    plist.clipboard 'a.install', '#install'
+    plist.clipboard 'a.plist_xml', '#plist_xml'
 
-    # when it's clicked, it hasn't toggled yet. so:
-    if $(this).hasClass 'active' # it's being toggled off
-      selected = (i for element, i in buttons when $(element).hasClass("active") and element isnt this)
-    else
-      selected = (i for element, i in buttons when $(element).hasClass("active") or element is this)
+  form_init: ->
+    $('#plist').button()
 
-    input = $(this).closest('.control-group').find('input')
-    if input.attr('id') is "plist_month_list"
-      selected = (m + 1 for m in selected)
-    input.val selected.join(",")
+    $('#plist_name').focus().select()
 
-    event.preventDefault()
+    $('#plist .btn-group .btn').click (event) ->
+      buttons = $(this).parent('.btn-group').children('.btn')
 
-  $('#plist').validate
-    errorElement: "span"
-    errorClass: "error"
-    successClass: "success"
+      # when it's clicked, it hasn't toggled yet. so:
+      if $(this).hasClass 'active' # it's being toggled off
+        selected = (i for element, i in buttons when $(element).hasClass("active") and element isnt this)
+      else
+        selected = (i for element, i in buttons when $(element).hasClass("active") or element is this)
 
-    onkeyup: false # this is a little aggressive
+      input = $(this).closest('.control-group').find('input')
+      if input.attr('id') is "plist_month_list"
+        selected = (m + 1 for m in selected)
+      input.val selected.join(",")
 
-    errorPlacement: (error, element) ->
-      $err = $(error).addClass('help-inline')
-      $(element).after $err
+      event.preventDefault()
 
-    highlight: (element, errorClass) ->
-      $(element).closest('.control-group').removeClass('success').addClass('error')
+    $('#plist').validate
+      errorElement: "span"
+      errorClass: "error"
+      successClass: "success"
 
-    unhighlight: (element, successClass) ->
-      group = $(element).closest('.control-group')
-      if group.hasClass('error')
-        group.removeClass('error').addClass('success')
+      onkeyup: false # this is a little aggressive
 
-    rules:
-      "plist[name]": "required"
-      "plist[command]": "required"
-      "plist[interval]":
-        digits: true
-        min: 1
-      "plist[minute]":
-        cron: true
-        cron_range: [0, 59]
-      "plist[hour]":
-        cron: true
-        cron_range: [0, 23]
-      "plist[day_of_month]":
-        cron: true
-        cron_range: [1, 31]
+      errorPlacement: (error, element) ->
+        $err = $(error).addClass('help-inline')
+        $(element).after $err
+
+      highlight: (element, errorClass) ->
+        $(element).closest('.control-group').removeClass('success').addClass('error')
+
+      unhighlight: (element, successClass) ->
+        group = $(element).closest('.control-group')
+        if group.hasClass('error')
+          group.removeClass('error').addClass('success')
+
+      rules:
+        "plist[name]": "required"
+        "plist[command]": "required"
+        "plist[interval]":
+          digits: true
+          min: 1
+        "plist[minute]":
+          cron: true
+          cron_range: [0, 59]
+        "plist[hour]":
+          cron: true
+          cron_range: [0, 23]
+        "plist[day_of_month]":
+          cron: true
+          cron_range: [1, 31]
 

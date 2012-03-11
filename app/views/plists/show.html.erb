@@ -1,18 +1,23 @@
+<script type="text/javascript" charset="utf-8">
+  $(function(){ plist.show_init(); });
+</script>
 <h2><%= @plist.label %>.plist</h2>
 <p class="pull-right">
-  <%= link_to "edit", edit_plist_path(@plist.uuid) %> or
+  <a href="#" title="copy to clipboard" class="plist_xml"><i class="icon-share"></i></a> |
+  <%= link_to "edit", edit_plist_path(@plist.uuid) %> |
   <%= link_to "download", plist_path(@plist.uuid, :format => :xml) %>
 </p>
 
 <p><code><%= @plist.command %></code></p>
-<pre><code><%= @plist_xml %></code></pre>
+<pre><code id="plist_xml"><%= @plist_xml %></code></pre>
 
 <% filename = Launched::Application::DOMAIN + "." + @plist.label + ".plist" -%>
 
 <p>
   To install:
-  <code>curl <%= install_plist_url(@plist.uuid) %> | sh</code>
-  (<%= link_to "source", install_plist_path(@plist.uuid) %>)
+  <code id="install">curl <%= install_plist_url(@plist.uuid) %> | sh</code>
+  <a href="#" title="copy to clipboard" class="install"><i class="icon-share"></i></a> |
+  <%= link_to "source", install_plist_path(@plist.uuid) %>
 </p>
 
 <p>Manual install:</p>

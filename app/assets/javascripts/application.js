@@ -13,5 +13,9 @@
 //= require jquery
 //= require jquery_ujs
 //= require bootstrap-button
+//= require bootstrap-tooltip
+// jquery ui custom has highlight effect
+//= require jquery-ui-1.8.18.custom.min
 //= require jquery.validate.min
+//= require jquery.zclip.min
 //= require_tree .
