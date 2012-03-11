@@ -3,7 +3,11 @@
     <%= form_for @plist, :as => :plist, :url => plists_path(:format => :xml), :html => {:id => "plist", :class => "form-vertical"} do |f| %>
 
       <fieldset>
-        <legend>Basics</legend>
+        <div class="row">
+          <div class="span12">
+            <legend>Basics</legend>
+          </div>
+        </div>
 
         <div class="row">
 
@@ -27,9 +31,13 @@
       </fieldset>
 
       <fieldset>
-        <legend>Schedule</legend>
         <div class="row">
+          <div class="span12">
+            <legend>Schedule</legend>
+          </div>
+        </div>
 
+        <div class="row">
           <div class="span5">
 
             <div class="control-group">
@@ -93,9 +101,13 @@
 
       <fieldset>
 
-        <legend>Extras</legend>
         <div class="row">
+          <div class="span12">
+            <legend>Extras</legend>
+          </div>
+        </div>
 
+        <div class="row">
           <div class="span5">
 
             <div class="control-group">

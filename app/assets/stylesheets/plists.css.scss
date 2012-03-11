@@ -15,7 +15,7 @@
 .form-actions:after {
   clear: both;
 }
-.form-actions:before, .form-actions::after {
+.form-actions:before, .form-actions:after {
   display: table;
   content: "";
 }
