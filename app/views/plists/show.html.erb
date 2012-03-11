@@ -26,12 +26,12 @@
 
 <p>Manual install:</p>
 <pre><code>mkdir -p ~/Library/LaunchAgents
-curl -o ~/Library/LaunchAgents/<%= filename %>
+curl -o ~/Library/LaunchAgents/<%= filename %> <%= plist_url @plist.uuid, :format => :xml %>
 launchctl load -w ~/Library/LaunchAgents/<%= filename %>
 </code></pre>
 
 <p>Or, to install as root:</p>
-<pre><code>curl -o ~/Downloads/<%= filename %>
+<pre><code>curl -o ~/Downloads/<%= filename %> <%= plist_url @plist.uuid, :format => :xml %>
 sudo cp ~/Downloads/<%= filename %> /Library/LaunchDaemons
 sudo launchctl load -w /Library/LaunchDaemons/<%= filename %>
 </code></pre>
