@@ -99,7 +99,7 @@ class CrontabExpression
   #
   # Example:
   #
-  #   cartesian_product(:m => [0,30], :h => [8,16]) # => [
+  #   merged_product(:m => [0,30], :h => [8,16]) # => [
   #     {:m => 0, :h => 8}
   #     {:m => 0, :h => 16}
   #     {:m => 30, :h => 8}
