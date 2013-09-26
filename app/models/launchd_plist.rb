@@ -1,6 +1,15 @@
 class LaunchdPlist < ActiveRecord::Base
 
+  CRON_EXP = /^[\-\/*0-9,]+$/
+
   validates_presence_of :uuid, :command, :name
+  validates_format_of :minute,
+    :with => CRON_EXP, :allow_nil => true, :allow_blank => true
+  validates_format_of :hour,
+    :with => CRON_EXP, :allow_nil => true, :allow_blank => true
+  validates_format_of :day_of_month,
+    :with => CRON_EXP, :allow_nil => true, :allow_blank => true
+
   before_validation :generate_uuid, :on => :create
 
   def label

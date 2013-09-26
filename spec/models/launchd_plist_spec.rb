@@ -20,6 +20,12 @@ describe LaunchdPlist do
       plist.save!
       plist.uuid.should_not be_nil
     end
+
+    it "disallows invalid minute values" do
+      plist.minute = "iamaspammer"
+      plist.save
+      plist.should have(1).error_on(:minute)
+    end
   end
 
   describe "#label" do
