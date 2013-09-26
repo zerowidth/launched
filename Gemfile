@@ -2,6 +2,7 @@ source 'https://rubygems.org'
 
 ruby "1.9.3"
 
+gem 'rake'
 gem 'rails', '~> 3.2.2'
 
 # Bundle edge Rails instead:
