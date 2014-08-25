@@ -36,7 +36,7 @@ launchctl load -w ~/Library/LaunchAgents/<%= Launched::Application::DOMAIN %>.yo
 </p>
 
 <pre><code># Put your plist in the system directory
-sudo cp ~/Downloads/<%= Launched::Application::DOMAIN %>.your_script.plist ~/Library/LaunchDaemons
+sudo cp ~/Downloads/<%= Launched::Application::DOMAIN %>.your_script.plist /Library/LaunchDaemons
 
 # And load it up with launchctl:
 sudo launchctl load -w /Library/LaunchDaemons/<%= Launched::Application::DOMAIN %>.your_script.plist
