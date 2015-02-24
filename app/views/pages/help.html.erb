@@ -50,10 +50,10 @@ sudo launchctl load -w /Library/LaunchDaemons/<%= Launched::Application::DOMAIN 
 <h3>Uninstalling a plist</h3>
 
 <p>Uninstalling a plist is just as easy as installing it. For a user plist:</p>
-<pre><code>launchctl load -w ~/Library/LaunchAgents/<%= Launched::Application::DOMAIN %>.your_script.plist</code></pre>
+<pre><code>launchctl unload -w ~/Library/LaunchAgents/<%= Launched::Application::DOMAIN %>.your_script.plist</code></pre>
 
 <p>And for root,</p>
-<pre><code>sudo launchctl load -w /Library/LaunchDaemons/<%= Launched::Application::DOMAIN %>.your_script.plist</code></pre>
+<pre><code>sudo launchctl unload -w /Library/LaunchDaemons/<%= Launched::Application::DOMAIN %>.your_script.plist</code></pre>
 
 <h3>Debugging</h3>
 
