@@ -2,33 +2,14 @@
 <html>
   <head>
     <title>Launched</title>
-    <%= stylesheet_link_tag    "application", :media => "all" %>
-    <%= javascript_include_tag "application" %>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all' %>
   </head>
+
   <body>
-
-    <div class="navbar">
-      <div class="navbar-inner">
-        <div class="container">
-          <%= link_to "launched", root_path, :class => "brand" %>
-          <span class="navbar-text">A launchd.plist generator</span>
-          <ul class="nav pull-right">
-            <li><%= link_to "Help", help_path %></li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="container">
-      <%= yield %>
-      <footer class="footer">
-        <p class="pull-right">
-          Built by <a href="http://zerowidth.com/about.html">Nathan Witmer</a>,
-          hosted on <a href="http://www.heroku.com/">heroku</a>,
-          <a href="https://github.com/zerowidth/launched">source on github</a>.
-        </p>
-      </footer>
-    </div>
+    <%= yield %>
   </body>
 </html>
