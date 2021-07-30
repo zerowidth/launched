@@ -34,7 +34,7 @@ class PlistsController < ApplicationController
   end
 
   def install
-    render template: "plists/install.txt"
+    render "plists/install", formats: [:txt]
   end
 
   protected
