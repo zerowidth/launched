@@ -1,6 +1,5 @@
 class PlistsController < ApplicationController
-
-  before_filter :find_plist_by_uuid, :only => [:show, :edit, :install]
+  before_action :find_plist_by_uuid, only: %i[show edit install]
 
   def new
     @plist = LaunchdPlist.new
@@ -12,7 +11,7 @@ class PlistsController < ApplicationController
     if @plist.save
       redirect_to plist_path(@plist.uuid)
     else
-      render :action => :new
+      render action: :new
     end
   end
 
@@ -21,21 +20,21 @@ class PlistsController < ApplicationController
 
     respond_to do |format|
       format.xml do
-        filename = Launched::Application::DOMAIN + "." + @plist.label + ".xml"
+        filename = "#{Launched::Application::DOMAIN}.#{@plist.label}.xml"
         headers["Content-Disposition"] =
-          %Q(attachment; filename="#{filename}"; size=#{@plist_xml.length})
-        render :xml => @plist_xml
+          %(attachment; filename="#{filename}"; size=#{@plist_xml.length})
+        render xml: @plist_xml
       end
       format.html
     end
   end
 
   def edit
-    render :action => "new"
+    render action: "new"
   end
 
   def install
-    render :template => "plists/install.txt"
+    render template: "plists/install.txt"
   end
 
   protected

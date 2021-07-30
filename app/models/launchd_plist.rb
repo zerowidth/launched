@@ -1,19 +1,15 @@
-class LaunchdPlist < ActiveRecord::Base
-
-  CRON_EXP = /\A[\-\/*0-9,]+\z/
+class LaunchdPlist < ApplicationRecord
+  CRON_EXP = %r{\A[\-/*0-9,]+\z}
 
   validates_presence_of :uuid, :command, :name
-  validates_format_of :minute,
-    :with => CRON_EXP, :allow_nil => true, :allow_blank => true
-  validates_format_of :hour,
-    :with => CRON_EXP, :allow_nil => true, :allow_blank => true
-  validates_format_of :day_of_month,
-    :with => CRON_EXP, :allow_nil => true, :allow_blank => true
+  validates_format_of :minute, with: CRON_EXP, allow_nil: true, allow_blank: true
+  validates_format_of :hour, with: CRON_EXP, allow_nil: true, allow_blank: true
+  validates_format_of :day_of_month, with: CRON_EXP, allow_nil: true, allow_blank: true
 
-  before_validation :generate_uuid, :on => :create
+  before_validation :generate_uuid, on: :create
 
   def label
-    name.downcase.gsub /\s+/, "_"
+    name.downcase.gsub(/\s+/, "_")
   end
 
   def weekday_list
@@ -29,5 +25,4 @@ class LaunchdPlist < ActiveRecord::Base
   def generate_uuid
     self.uuid = UUID.generate
   end
-
 end

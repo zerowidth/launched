@@ -10,11 +10,11 @@ describe PlistsController do
 
     def create(overrides={})
       post :create,
-        :plist => {
+        params: { :plist => {
           :name => "test command",
           :command => "echo hello",
           :interval => "300"
-        }.merge(overrides)
+        }.merge(overrides) }
     end
 
     it "redirects to the new plist path, using uuid as the id" do
@@ -32,7 +32,7 @@ describe PlistsController do
 
     context "when requesting xml" do
       before do
-        get :show, :id => plist.uuid, :format => :xml
+        get :show, params: { id: plist.uuid }, :format => :xml
       end
 
       it "renders an xml plist with the xml format" do
@@ -45,36 +45,36 @@ describe PlistsController do
     end
 
     it "renders html with the html format" do
-      get :show, :id => plist.uuid
+      get :show, params: { id: plist.uuid }
       expect(response).to be_success
       expect(response).to render_template("show")
     end
 
     it "raises a record not found error for invalid ids" do
-      expect { get :show, :id => 'lol' }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { get :show, params: { id: 'lol' } }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
   end
 
   describe "GET to edit with a UUID" do
     it "is succesful" do
-      get :edit, :id => plist.uuid
+      get :edit, params: { id: plist.uuid }
       expect(response).to be_success
     end
 
     it "renders the new plist form" do
-      get :edit, :id => plist.uuid
+      get :edit, params: { id: plist.uuid }
       expect(response).to render_template("new")
     end
 
     it "raises a record not found error for invalid ids" do
-      expect { get :edit, :id => 'lol' }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { get :edit, params: { id: 'lol' } }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 
   describe "GET to install with a UUID" do
     it "is successful" do
-      get :install, :id => plist.uuid
+      get :install, params: { id: plist.uuid }
       expect(response).to be_success
     end
   end

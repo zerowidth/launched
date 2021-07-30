@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -9,14 +8,17 @@
 # from scratch. The latter is a flawed and unsustainable approach (the more migrations
 # you'll amass, the slower it'll run and the greater likelihood for issues).
 #
-# It's strongly recommended to check this file into your version control system.
+# It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120310202133) do
+ActiveRecord::Schema.define(version: 20120310202133) do
 
-  create_table "launchd_plists", :force => true do |t|
-    t.string   "uuid",              :limit => 36,   :null => false
-    t.string   "command",           :limit => 1024, :null => false
-    t.string   "name",                              :null => false
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
+  create_table "launchd_plists", force: :cascade do |t|
+    t.string   "uuid",              limit: 36,   null: false
+    t.string   "command",           limit: 1024, null: false
+    t.string   "name",                           null: false
     t.string   "minute"
     t.string   "hour"
     t.string   "day_of_month"
@@ -29,8 +31,8 @@ ActiveRecord::Schema.define(:version => 20120310202133) do
     t.string   "group"
     t.string   "root_directory"
     t.string   "working_directory"
-    t.datetime "created_at",                        :null => false
-    t.datetime "updated_at",                        :null => false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
   end
 
 end
