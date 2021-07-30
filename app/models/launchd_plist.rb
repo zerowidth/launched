@@ -1,6 +1,6 @@
 class LaunchdPlist < ActiveRecord::Base
 
-  CRON_EXP = /^[\-\/*0-9,]+$/
+  CRON_EXP = /\A[\-\/*0-9,]+\z/
 
   validates_presence_of :uuid, :command, :name
   validates_format_of :minute,

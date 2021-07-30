@@ -13,46 +13,46 @@ describe LaunchdPlist do
 
   describe "when saving to the database" do
     it "creates a record in the db" do
-      lambda { plist.save! }.should change(LaunchdPlist, :count).by(1)
+      expect { plist.save! }.to change(LaunchdPlist, :count).by(1)
     end
 
     it "generates a UUID for the plist" do
       plist.save!
-      plist.uuid.should_not be_nil
+      expect(plist.uuid).to_not be_nil
     end
 
     it "disallows invalid minute values" do
       plist.minute = "iamaspammer"
-      plist.save
-      plist.should have(1).error_on(:minute)
+      expect(plist).to_not be_valid
+      expect(plist.errors[:minute]).to be_present
     end
   end
 
   describe "#label" do
     it "returns a computer-readable version of the name" do
-      plist.label.should == "hello_world"
+      expect(plist.label).to eq("hello_world")
     end
   end
 
   describe "#month_list" do
     it "returns an integer array of months" do
-      plist.month_list.should == [1,4,7,10]
+      expect(plist.month_list).to eq [1,4,7,10]
     end
 
     it "returns an empty array when months is nil" do
       plist.months = nil
-      plist.month_list.should == []
+      expect(plist.month_list).to be_empty
     end
   end
 
   describe "weekday_list" do
     it "returns an integer array of weekdays" do
-      plist.weekday_list.should == [1,2,3,4,5]
+      expect(plist.weekday_list).to eq [1,2,3,4,5]
     end
 
     it "returns an empty array when weekdays is nil" do
       plist.weekdays = nil
-      plist.weekday_list.should == []
+      expect(plist.weekday_list).to be_empty
     end
   end
 

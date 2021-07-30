@@ -7,7 +7,7 @@ class PlistsController < ApplicationController
   end
 
   def create
-    @plist = LaunchdPlist.new params[:plist]
+    @plist = LaunchdPlist.new(plist_params)
 
     if @plist.save
       redirect_to plist_path(@plist.uuid)
@@ -39,6 +39,10 @@ class PlistsController < ApplicationController
   end
 
   protected
+
+  def plist_params
+    params.require(:plist).permit(:name, :command, :interval)
+  end
 
   def find_plist_by_uuid
     @plist = LaunchdPlist.find_by_uuid(params[:id]) or raise ActiveRecord::RecordNotFound

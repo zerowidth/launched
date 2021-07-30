@@ -1,56 +1,24 @@
 source 'https://rubygems.org'
 
-ruby "1.9.3"
+ruby "2.3.5"
 
 gem 'rake'
-gem 'rails', '~> 3.2.2'
+gem 'rails', '~> 4.0'
 
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
-
-gem "pg"
+gem "pg", "~> 0.21.0"
 gem "uuid"
 gem "plist"
-gem 'anjlab-bootstrap-rails', :require => 'bootstrap-rails',
-                              :git => 'git://github.com/anjlab/bootstrap-rails.git'
-
-gem "thin"
+# gem 'anjlab-bootstrap-rails', :require => 'bootstrap-rails',
+#                               :git => 'git://github.com/anjlab/bootstrap-rails.git'
 
 # Gems used only for assets and not required
 # in production environments by default.
-group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
-
-  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  # gem 'therubyracer'
-
-  gem 'uglifier', '>= 1.0.3'
-end
+gem 'sass-rails', "~> 4.0.5"
+gem 'coffee-rails', '~> 4.2.2'
+gem 'uglifier', '>= 1.0.3'
 
 gem 'jquery-rails'
 
-# To use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
-
-# To use Jbuilder templates for JSON
-# gem 'jbuilder'
-
-# Use unicorn as the web server
-# gem 'unicorn'
-
-# Deploy with Capistrano
-# gem 'capistrano'
-
-# To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
-
 group :development, :test do
-  gem "rspec-rails"
-  gem "guard-rspec"
-end
-
-group :test do
-  gem "rb-fsevent"
-  gem "growl"
+  gem "rspec-rails", "~> 3.9"
 end

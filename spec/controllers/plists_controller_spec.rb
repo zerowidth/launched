@@ -1,4 +1,4 @@
-require 'spec_helper'
+require "rails_helper"
 
 describe PlistsController do
 
@@ -20,11 +20,11 @@ describe PlistsController do
     it "redirects to the new plist path, using uuid as the id" do
       create
       plist = LaunchdPlist.last
-      response.should redirect_to(plist_path(plist.uuid))
+      expect(response).to redirect_to(plist_path(plist.uuid))
     end
 
     it "creates a launchd plist entry" do
-      lambda { create }.should change(LaunchdPlist, :count).by(1)
+      expect(lambda { create }).to change(LaunchdPlist, :count).by(1)
     end
   end
 
@@ -36,24 +36,22 @@ describe PlistsController do
       end
 
       it "renders an xml plist with the xml format" do
-        response.body.should =~ /xml.*StartInterval/m
+        expect(response.body).to match(/xml.*StartInterval/m)
       end
 
       it "sets the content-disposition header" do
-        response.headers["Content-Disposition"].should =~ /attachment.*test\.xml/
+        expect(response.headers["Content-Disposition"]).to match(/attachment.*test\.xml/)
       end
     end
 
     it "renders html with the html format" do
       get :show, :id => plist.uuid
-      response.should be_success
-      response.should render_template("show")
+      expect(response).to be_success
+      expect(response).to render_template("show")
     end
 
     it "raises a record not found error for invalid ids" do
-      lambda do
-        get :show, :id => 'lol'
-      end.should raise_error(ActiveRecord::RecordNotFound)
+      expect { get :show, :id => 'lol' }.to raise_error(ActiveRecord::RecordNotFound)
     end
 
   end
@@ -61,25 +59,23 @@ describe PlistsController do
   describe "GET to edit with a UUID" do
     it "is succesful" do
       get :edit, :id => plist.uuid
-      response.should be_success
+      expect(response).to be_success
     end
 
     it "renders the new plist form" do
       get :edit, :id => plist.uuid
-      response.should render_template("new")
+      expect(response).to render_template("new")
     end
 
     it "raises a record not found error for invalid ids" do
-      lambda do
-        get :edit, :id => 'lol'
-      end.should raise_error(ActiveRecord::RecordNotFound)
+      expect { get :edit, :id => 'lol' }.to raise_error(ActiveRecord::RecordNotFound)
     end
   end
 
   describe "GET to install with a UUID" do
     it "is successful" do
       get :install, :id => plist.uuid
-      response.should be_success
+      expect(response).to be_success
     end
   end
 end
