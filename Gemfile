@@ -21,4 +21,5 @@ gem 'jquery-rails'
 
 group :development, :test do
   gem "rspec-rails", "~> 3.9"
+  gem 'web-console', '~> 2.0'
 end
