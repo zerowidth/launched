@@ -12,6 +12,7 @@ gem 'sass-rails', '>= 6'
 # Use Active Model has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
+gem "bootstrap"
 gem "plist"
 gem "redis"
 gem "uuid"
