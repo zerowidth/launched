@@ -46,7 +46,7 @@ describe PlistsController do
 
     it "renders html with the html format" do
       get :show, params: { id: plist.uuid }
-      expect(response).to be_success
+      expect(response).to be_successful
       expect(response).to render_template("show")
     end
 
@@ -59,7 +59,7 @@ describe PlistsController do
   describe "GET to edit with a UUID" do
     it "is succesful" do
       get :edit, params: { id: plist.uuid }
-      expect(response).to be_success
+      expect(response).to be_successful
     end
 
     it "renders the new plist form" do
@@ -75,7 +75,7 @@ describe PlistsController do
   describe "GET to install with a UUID" do
     it "is successful" do
       get :install, params: { id: plist.uuid }
-      expect(response).to be_success
+      expect(response).to be_successful
     end
   end
 end

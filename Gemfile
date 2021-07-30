@@ -3,7 +3,10 @@ source 'https://rubygems.org'
 ruby "2.6.8"
 
 gem 'rake'
-gem 'rails', '~> 5.0.7'
+gem 'rails', '~> 5.2.6'
+
+# Reduces boot times through caching; required in config/boot.rb
+gem 'bootsnap', '>= 1.1.0', require: false
 
 gem "pg", "~> 0.21.0"
 gem "uuid"
@@ -19,4 +22,5 @@ gem "plist"
 gem "rails-controller-testing", group: :test
 gem "rspec-rails", group: :test
 
+gem 'listen', group: :development
 gem 'web-console', group: :development
