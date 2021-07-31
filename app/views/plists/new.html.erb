@@ -1,185 +1,99 @@
-<script type="text/javascript" charset="utf-8">
-  $(function(){ plist.form_init(); });
-</script>
-<div class="row">
-  <div class="span12">
-    <%= form_for @plist, :as => :plist, :url => plists_path, :method => "post", :html => {:id => "plist", :class => "form-vertical"} do |f| %>
-
-      <fieldset>
-        <div class="row">
-          <div class="span12">
-            <legend>Basics</legend>
-          </div>
+<%= form_for @plist, as: :plist, url: plists_path, html: { :id => "plist" } do |f| %>
+  <fieldset>
+    <legend class="border-bottom">Basics</legend>
+    <div class="row mb-3">
+      <div class="col">
+        <%= f.label :name %>
+        <div class="input-group">
+          <span class="input-group-text"><tt>com.zerowidth.launched.</tt></span>
+          <%= f.text_field :name, class: "form-control" %>
         </div>
-
-        <div class="row">
-
-          <div class="span5">
-            <div class="control-group">
-              <%= f.label :name %>
-              <%= f.text_field :name, :class => "span4" %>
-            </div>
-          </div>
-
-          <div class="span7">
-            <div class="control-group">
-              <%= f.label :command %>
-              <div class="input-prepend">
-                <span class="add-on">sh -c</span>
-                <%= f.text_field :command, :class => "span6" %>
-              </div>
-            </div>
-          </div>
-        </div>
-      </fieldset>
-
-      <fieldset>
-        <div class="row">
-          <div class="span12">
-            <legend>Schedule</legend>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="span5">
-
-            <div class="control-group">
-              <%= f.label :minute %>
-              <%= f.text_field :minute, :class => "span1" %>
-              <span class="help-inline">Cron syntax: <code>*</code>, or e.g. <code>0</code>, <code>0,30</code>, <code>*/5</code></span>
-            </div>
-
-            <div class="control-group">
-              <%= f.label :hour %>
-              <%= f.text_field :hour, :class => "span1" %>
-              <span class="help-inline">Cron syntax, <code>0-23</code></span>
-            </div>
-
-            <div class="control-group">
-              <%= f.label :day_of_month, "Day of Month" %>
-              <%= f.text_field :day_of_month, :class => "span1" %>
-              <span class="help-inline">Cron syntax: <code>1-31</code>, <code>1,15</code>, etc.</span>
-            </div>
-          </div>
-
-          <div class="span7">
-
-            <div class="control-group">
-              <label>Weekday</label>
-              <div class="btn-group" data-toggle="buttons-checkbox">
-                <% Date::ABBR_DAYNAMES.each.with_index do |day, i| -%>
-                  <a href="#" class="btn <%= "active" if @plist.weekday_list.include? i %>"><%= day %></a>
-                <% end -%>
-              </div>
-              <%= f.hidden_field :weekdays %>
-              <span class="help-inline">None selected implies "all".</span>
-            </div>
-
-            <div class="control-group">
-              <label>Month</label>
-              <div class="controls">
-                <div class="btn-group" data-toggle="buttons-checkbox">
-                  <% Date::ABBR_MONTHNAMES.each.with_index do |month, i| -%>
-                    <% next unless month # 0 is nil -%>
-                    <a href="#" class="btn <%= "active" if @plist.month_list.include? i %>"><%= month %></a>
-                  <% end -%>
-                </div>
-                <%= f.hidden_field :months %>
-                <span class="help-inline">None selected implies "all".</span>
-              </div>
-            </div>
-
-            <div class="control-group">
-              <%= f.label :interval, "Run Interval" %>
-              <div class="controls">
-                <%= f.text_field :interval, :class => "span1" %>
-                <span class="help-inline">Run at this interval (seconds)</span>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </fieldset>
-
-
-      <fieldset>
-
-        <div class="row">
-          <div class="span12">
-            <legend>Extras</legend>
-          </div>
-        </div>
-
-        <div class="row">
-          <div class="span5">
-
-            <div class="control-group">
-              <%= f.label :run_at_load %>
-              <div class="controls">
-                <label class="checkbox">
-                  <%= f.check_box :run_at_load %>
-                  Runs once when loaded (including at boot)
-                </label>
-              </div>
-            </div>
-
-            <div class="control-group">
-              <%= f.label :launch_only_once %>
-              <label class="checkbox">
-                <%= f.check_box :launch_only_once %>
-                Run this plist only once ever, unless the system is rebooted
-              </label>
-            </div>
-
-          </div>
-
-          <div class="span7">
-
-            <div class="row">
-              <div class="control-group span3">
-                <%= f.label :user %>
-                <%= f.text_field :user %>
-                <p>Run as this user</p>
-              </div>
-
-              <div class="control-group span4">
-                <%= f.label :group %>
-                <%= f.text_field :group %>
-                <p>and/or this group</p>
-              </div>
-            </div>
-
-            <div class="control-group">
-              <%= f.label :root_directory, "Root Directory" %>
-              <%= f.text_field :root_directory, :class => "span6" %>
-              <p>Run with this root directory (via chroot)</p>
-            </div>
-
-            <div class="control-group">
-              <%= f.label :working_directory, "Working Directory" %>
-              <%= f.text_field :working_directory, :class => "span6" %>
-              <p>Run with this working directory</p>
-            </div>
-
-        </div>
-      </fieldset>
-
-
-    <div class="form-actions">
-      <div class="pull-right">
-        <button type="submit" class="btn btn-success">
-          <i class="icon-ok icon-white"></i>
-          Create .plist
-        </button>
       </div>
-      <% unless @plist.new_record? -%>
-        <p>
-          <span class="label label-warning">Notice</span>
-          For security, editing a .plist creates a new, different entry.
-        </p>
-      <% end -%>
+      <div class="col">
+        <%= f.label :command %>
+        <div class="input-group">
+          <span class="input-group-text"><tt>sh -c</tt></span>
+          <%= f.text_field :command, class: "form-control" %>
+        </div>
+      </div>
     </div>
+  </fieldset>
 
+  <fieldset>
+    <legend class="border-bottom">Schedule</legend>
+
+    <div class="row row-cols-6 mb-3">
+      <div class="col">
+        <%= f.label :start_interval, class: "form-label" %>
+        <%= f.text_field :start_interval, class: "form-control" %>
+        <span class="form-text">Run at this interval (seconds)</span>
+      </div>
+      <div class="col">
+        <%= f.label :minute, class: "form-label" %>
+        <%= f.text_field :minute, class: "form-control" %>
+        <span class="form-text">Cron syntax: <code>0-59</code>, <code>0,30</code>, <code>*/5</code></span>
+      </div>
+      <div class="col">
+        <%= f.label :hour, class: "form-label" %>
+        <%= f.text_field :hour, class: "form-control" %>
+        <span class="form-text">Cron: <code>0-23</code>, <code>0,12</code>, <code>*/3</code></span>
+      </div>
+      <div class="col">
+        <%= f.label :day_of_month, class: "form-label" %>
+        <%= f.text_field :day_of_month, class: "form-control" %>
+        <span class="form-text">Cron: <code>1-31</code>, <code>1,15</code>, <code>*/3</code></span>
+      </div>
+      <div class="col">
+        <%= f.label :month, class: "form-label" %>
+        <%= f.text_field :month, class: "form-control" %>
+        <span class="form-text">Cron: <code>1-12</code>, <code>1,7</code>, <code>*</code>, <code>*/3</code></span>
+      </div>
+      <div class="col">
+        <%= f.label :weekday, class: "form-label" %>
+        <%= f.text_field :weekday, class: "form-control" %>
+        <span class="form-text">Cron: <code>0-6</code>, <code>0,3</code>, <code>*</code></span>
+      </div>
+    </div>
+    <p>If no schedule is defined, launchd will keep the program running at all times.</p>
+  </fieldset>
+
+  <fieldset>
+    <legend class="border-bottom">Runtime</legend>
+    <div class="row mb-3">
+      <div class="col">
+        <%= f.label :user, class: "form-label" %>
+        <%= f.text_field :user, class: "form-control" %>
+        <span class="form-text">Run as this user</span>
+      </div>
+      <div class="col">
+        <%= f.label :group, class: "form-label" %>
+        <%= f.text_field :group, class: "form-control" %>
+        <span class="form-text">and/or this group</span>
+      </div>
+    </div>
+    <div class="row mb-3">
+      <div class="col">
+        <%= f.label :working_directory, class: "form-label" %>
+        <%= f.text_field :working_directory, class: "form-control" %>
+        <span class="form-text">Run in this working directory</span>
+      </div>
+      <div class="col">
+        <%= f.label :root_directory, class: "form-label" %>
+        <%= f.text_field :root_directory, class: "form-control" %>
+        <span class="form-text">Run with chroot in this directory</span>
+      </div>
+    </div>
+  </fieldset>
+
+  <div class="row border-top pt-3">
+    <% unless @plist.new_record? -%>
+      <p>
+        <span class="label label-warning">Notice</span>
+        For security, editing a .plist creates a new, different entry.
+      </p>
     <% end -%>
+    <div class="col-auto ms-auto">
+      <%= f.submit "Create Plist", class: "btn btn-primary" %>
+    </div>
   </div>
-</div>
+<% end %>

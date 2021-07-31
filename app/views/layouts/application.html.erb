@@ -10,6 +10,28 @@
   </head>
 
   <body>
-    <%= yield %>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+      <div class="container-md">
+        <%= link_to "launched", root_path, class: "navbar-brand" %>
+        <span class="navbar-text">A launchd plist generator</span>
+        <div class="navbar-nav">
+          <%= link_to "Help", help_path, class: "nav-link" %>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-md py-3">
+      <%= yield %>
+    </div>
+
+    <footer class="border-top">
+      <div class="container-md py-2">
+        <p>
+          Built by <a href="https://zerowidth.com">Nathan Witmer</a>,
+          hosted on <a href="https://www.heroku.com/">heroku</a>,
+          <a href="https://github.com/zerowidth/launched">source on github</a>.
+        </p>
+      </div>
+     </footer>
   </body>
 </html>
