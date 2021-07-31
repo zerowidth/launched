@@ -30,8 +30,11 @@ class LaunchdPlist
 
   validates :command, presence: true, length: { maximum: 1024 }
   validates :name, presence: true, length: { maximum: 256 }
-  validates :minute, :hour, :day_of_month, format: { with: CRON_EXP }, allow_blank: true
-  # TODO more string limits
+  validates :start_interval, numericality: true, allow_blank: true
+  validates :minute, :hour, :day_of_month, :month, :weekday,
+    length: { maximum: 64 }, format: { with: CRON_EXP }, allow_blank: true
+  validates :user, :group, :root_directory, :working_directory,
+    length: { maximum: 256 }, allow_blank: true
 
   def self.count
     REDIS.with do |redis|
@@ -77,7 +80,7 @@ class LaunchdPlist
   end
 
   def new_record?
-    persisted
+    !persisted
   end
 
   def save

@@ -35,7 +35,8 @@ describe LaunchdPlist do
       from_db = LaunchdPlist.find(plist.uuid)
       expect(from_db).to be_present
       expect(from_db.attributes.except("created_at")).to eq(plist.attributes.except("created_at"))
-      expect(from_db.attributes["created_at"].to_i).to eq(plist.attributes["created_at"].to_i)
+      expect(from_db.created_at.to_i).to eq(plist.created_at.to_i)
+      expect(from_db.start_interval).to be_nil
     end
 
     it "generates a UUID for the plist" do
