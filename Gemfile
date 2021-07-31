@@ -16,6 +16,7 @@ gem "bootstrap"
 gem "connection_pool"
 gem "plist"
 gem "redis"
+gem "simple_form"
 gem "uuid"
 
 group :development, :test do
