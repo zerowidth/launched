@@ -2,7 +2,6 @@ class LaunchdPlist
   include ActiveModel::Model
   include ActiveModel::Attributes
   include ActiveModel::Serializers::JSON
-  include ActiveModel::Validations
 
   attribute :uuid, :string
   attribute :command, :string # limit 1024
@@ -52,6 +51,7 @@ class LaunchdPlist
         plist = new
         plist.from_json(json)
         plist.uuid = uuid
+        plist.persisted = true
         plist
       end
     end
@@ -61,6 +61,17 @@ class LaunchdPlist
     super
     self.created_at ||= Time.now.utc
     self.uuid ||= UUID.generate
+    self.persisted = false
+  end
+
+  attr_accessor :persisted
+
+  def persisted?
+    persisted
+  end
+
+  def new_record?
+    persisted
   end
 
   def save
@@ -68,6 +79,7 @@ class LaunchdPlist
       REDIS.with do |redis|
         redis.set("#{self.class.namespace}:#{uuid}", to_json)
       end
+      self.persisted = true
       true
     end
   end

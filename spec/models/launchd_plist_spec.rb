@@ -18,6 +18,9 @@ describe LaunchdPlist do
     )
   end
 
+  let(:active_model_instance) { plist }
+  it_behaves_like "ActiveModel"
+
   it "is valid" do
     expect(plist).to be_valid
   end

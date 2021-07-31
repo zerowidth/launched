@@ -94,3 +94,19 @@ RSpec.configure do |config|
   Kernel.srand config.seed
 =end
 end
+
+# https://gist.github.com/mikegehard/910773/ff287032b9f63158b0ac64dcdaaef9a18f98c828
+shared_examples_for "ActiveModel" do
+  # require 'test/unit/assertions'
+  require 'active_model/lint'
+  # include Test::Unit::Assertions
+  include ActiveModel::Lint::Tests
+
+  before do
+    @model = active_model_instance
+  end
+
+  ActiveModel::Lint::Tests.public_instance_methods.map { |method| method.to_s }.grep(/^test/).each do |method|
+    example(method.gsub('_', ' ')) { send method }
+  end
+end
