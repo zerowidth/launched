@@ -4,20 +4,26 @@ class LaunchdPlist
   include ActiveModel::Serializers::JSON
 
   attribute :uuid, :string
-  attribute :command, :string # limit 1024
+
+  # basics
   attribute :name, :string
+  attribute :command, :string
+
+  # scheduling
+  attribute :start_interval, :integer
   attribute :minute, :string
   attribute :hour, :string
   attribute :day_of_month, :string
-  attribute :weekdays, :string
-  attribute :months, :string
-  attribute :interval, :integer
-  attribute :run_at_load, :boolean
-  attribute :launch_only_once, :boolean
+  attribute :month, :string
+  attribute :weekday, :string
+
+  # runtime
   attribute :user, :string
   attribute :group, :string
   attribute :root_directory, :string
   attribute :working_directory, :string
+
+  # just for tracking
   attribute :created_at, :datetime
 
   CRON_EXP = %r{\A[\-/*0-9,]+\z}
@@ -90,14 +96,14 @@ class LaunchdPlist
       "uuid" => uuid, # redundant but it's fine
       "command" => command,
       "name" => name,
+      "start_interval" => start_interval,
       "minute" => minute,
       "hour" => hour,
       "day_of_month" => day_of_month,
-      "weekdays" => weekdays,
-      "months" => months,
-      "interval" => interval,
-      "run_at_load" => run_at_load,
-      "launch_only_once" => launch_only_once,
+      "month" => month,
+      "weekday" => weekday,
+      # "run_at_load" => run_at_load,
+      # "launch_only_once" => launch_only_once,
       "user" => user,
       "group" => group,
       "root_directory" => root_directory,
@@ -114,14 +120,6 @@ class LaunchdPlist
   end
 
   def label
-    name.downcase.gsub(/\s+/, "_")
-  end
-
-  def weekday_list
-    (weekdays || "").split(",").map(&:to_i)
-  end
-
-  def month_list
-    (months || "").split(",").map(&:to_i)
+    name&.downcase&.gsub(/\s+/, "_")
   end
 end

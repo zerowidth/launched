@@ -20,9 +20,7 @@ class LaunchdSerializer
         attrs["StartCalendarInterval"] = calendar_intervals
       end
 
-      attrs["StartInterval"] = plist.interval if plist.interval
-      attrs["RunAtLoad"] = true if plist.run_at_load
-      attrs["LaunchOnlyOnce"] = true if plist.launch_only_once
+      attrs["StartInterval"] = plist.start_interval if plist.start_interval
       attrs["UserName"] = plist.user if plist.user.present?
       attrs["GroupName"] = plist.group if plist.group.present?
       attrs["RootDirectory"] = plist.root_directory if plist.root_directory.present?
@@ -35,8 +33,8 @@ class LaunchdSerializer
       :minute => plist.minute,
       :hour => plist.hour,
       :day => plist.day_of_month,
-      :day_of_week => plist.weekdays,
-      :month => plist.months
+      :day_of_week => plist.weekday,
+      :month => plist.month
     )
 
     intervals = crontab_expression.intervals.map do |i|

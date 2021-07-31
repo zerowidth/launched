@@ -13,8 +13,8 @@ describe LaunchdPlist do
     LaunchdPlist.new(
       :name => "Hello World",
       :command => 'growlnotify -m "hello!"',
-      :weekdays => "1,2,3,4,5",
-      :months => "1,4,7,10"
+      :weekday => "1,2,3,4,5",
+      :month => "1,4,7,10"
     )
   end
 
@@ -55,27 +55,4 @@ describe LaunchdPlist do
       expect(plist.label).to eq("hello_world")
     end
   end
-
-  describe "#month_list" do
-    it "returns an integer array of months" do
-      expect(plist.month_list).to eq [1,4,7,10]
-    end
-
-    it "returns an empty array when months is nil" do
-      plist.months = nil
-      expect(plist.month_list).to be_empty
-    end
-  end
-
-  describe "weekday_list" do
-    it "returns an integer array of weekdays" do
-      expect(plist.weekday_list).to eq [1,2,3,4,5]
-    end
-
-    it "returns an empty array when weekdays is nil" do
-      plist.weekdays = nil
-      expect(plist.weekday_list).to be_empty
-    end
-  end
-
 end

@@ -10,7 +10,7 @@ describe PlistsController do
   end
 
   let :plist do
-    p = LaunchdPlist.new(name: "test", command: "ls", interval: "300")
+    p = LaunchdPlist.new(name: "test", command: "ls", start_interval: "300")
     unless p.save
       raise p.errors.inspect
     end
@@ -23,7 +23,7 @@ describe PlistsController do
         params: { plist: {
           name: "test command",
           command: "echo hello",
-          interval: "300",
+          start_interval: "300",
         }.merge(overrides) }
     end
 
