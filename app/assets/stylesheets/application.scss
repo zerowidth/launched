@@ -14,3 +14,8 @@
 
 // Custom bootstrap variables must be set or imported *before* bootstrap.
 @import "bootstrap";
+
+#plist_xml {
+  max-height: 800px;
+  overflow: auto;
+};
