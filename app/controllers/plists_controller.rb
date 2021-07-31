@@ -21,8 +21,10 @@ class PlistsController < ApplicationController
     respond_to do |format|
       format.xml do
         filename = "#{Launched::DOMAIN}.#{@plist.label}.xml"
-        headers["Content-Disposition"] =
-          %(attachment; filename="#{filename}"; size=#{@plist_xml.length})
+        if params["download"]
+          headers["Content-Disposition"] =
+            %(attachment; filename="#{filename}"; size=#{@plist_xml.length})
+        end
         render xml: @plist_xml
       end
       format.html

@@ -40,15 +40,13 @@ describe PlistsController do
 
   describe "GET to show with a UUID" do
     context "when requesting xml" do
-      before do
-        get :show, params: { id: plist.uuid }, format: :xml
-      end
-
       it "renders an xml plist with the xml format" do
+        get :show, params: { id: plist.uuid }, format: :xml
         expect(response.body).to match(/xml.*StartInterval/m)
       end
 
-      it "sets the content-disposition header" do
+      it "sets the content-disposition header when download is set to true" do
+        get :show, params: { id: plist.uuid, download: true }, format: :xml
         expect(response.headers["Content-Disposition"]).to match(/attachment.*test\.xml/)
       end
     end
