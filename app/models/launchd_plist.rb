@@ -44,8 +44,8 @@ class LaunchdPlist
 
   def self.all
     REDIS.with do |redis|
-      redis.scan_each(match: "#{namespace}:*").map do |uuid|
-        find uuid.split(":")[1]
+      redis.scan_each(match: "#{namespace}:*").map do |key|
+        find key.split(":")[1]
       end
     end
   end
@@ -84,19 +84,18 @@ class LaunchdPlist
   end
 
   def save
-    if valid?
-      REDIS.with do |redis|
-        redis.set("#{self.class.namespace}:#{uuid}", to_json)
-      end
-      self.persisted = true
-      true
+    return false unless valid?
+
+    REDIS.with do |redis|
+      redis.set("#{self.class.namespace}:#{uuid}", to_json)
     end
+    self.persisted = true
+    true
   end
 
   # For ActiveModel::Serialization
   def attributes
     {
-      "uuid" => uuid, # redundant but it's fine
       "command" => command,
       "name" => name,
       "start_interval" => start_interval,
@@ -105,8 +104,6 @@ class LaunchdPlist
       "day_of_month" => day_of_month,
       "month" => month,
       "weekday" => weekday,
-      # "run_at_load" => run_at_load,
-      # "launch_only_once" => launch_only_once,
       "user" => user,
       "group" => group,
       "root_directory" => root_directory,
