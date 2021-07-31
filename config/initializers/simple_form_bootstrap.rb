@@ -10,7 +10,7 @@
 # components.
 # See https://github.com/heartcombo/simple_form#custom-components
 # to know more about custom components.
-# Dir[Rails.root.join('lib/components/**/*.rb')].each { |f| require f }
+Dir[Rails.root.join('lib/components/**/*.rb')].each { |f| require f }
 
 # Use this setup block to configure all options available in SimpleForm.
 SimpleForm.setup do |config|
@@ -57,7 +57,7 @@ SimpleForm.setup do |config|
     b.optional :pattern
     b.optional :min_max
     b.optional :readonly
-    b.use :label
+    b.use :label, class: "form-label"
     b.use :input, class: 'form-control', error_class: 'is-invalid', valid_class: 'is-valid'
     b.use :full_error, wrap_with: { tag: 'div', class: 'invalid-feedback' }
     b.use :hint, wrap_with: { tag: 'small', class: 'form-text text-muted' }
@@ -425,6 +425,26 @@ SimpleForm.setup do |config|
     range:         :vertical_range,
     time:          :vertical_multi_select
   }
+
+  # same as the vertical form wrapper, but with a `<tt>` prefix on the input field
+  config.wrappers :tt_prefix, tag: 'div', class: 'form-group', error_class: 'form-group-invalid', valid_class: 'form-group-valid' do |b|
+    b.use :html5
+    b.use :placeholder
+    b.optional :maxlength
+    b.optional :minlength
+    b.optional :pattern
+    b.optional :min_max
+    b.optional :readonly
+    b.use :label, class: "form-label"
+    b.wrapper :div, class: "input-group" do |group|
+      group.wrapper :span, class: "input-group-text" do |span|
+        span.use :prefix, wrap_with: { tag: "tt" }
+      end
+      group.use :input, class: 'form-control', error_class: 'is-invalid', valid_class: 'is-valid'
+    end
+    b.use :full_error, wrap_with: { tag: 'div', class: 'invalid-feedback' }
+    b.use :hint, wrap_with: { tag: 'small', class: 'form-text text-muted' }
+  end
 
   # enable custom form wrappers
   # config.wrapper_mappings = {

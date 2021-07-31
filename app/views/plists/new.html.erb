@@ -1,20 +1,12 @@
-<%= form_for @plist, as: :plist, url: plists_path, html: { :id => "plist" } do |f| %>
+<%= simple_form_for @plist, as: :plist, url: plists_path do |f| %>
   <fieldset>
     <legend class="border-bottom">Basics</legend>
     <div class="row mb-3">
       <div class="col">
-        <%= f.label :name %>
-        <div class="input-group">
-          <span class="input-group-text"><tt>com.zerowidth.launched.</tt></span>
-          <%= f.text_field :name, class: "form-control" %>
-        </div>
+        <%= f.input :name, wrapper: :tt_prefix, prefix: "#{Launched::DOMAIN}." %>
       </div>
       <div class="col">
-        <%= f.label :command %>
-        <div class="input-group">
-          <span class="input-group-text"><tt>sh -c</tt></span>
-          <%= f.text_field :command, class: "form-control" %>
-        </div>
+        <%= f.input :command, wrapper: :tt_prefix, prefix: "sh -c" %>
       </div>
     </div>
   </fieldset>
@@ -24,34 +16,22 @@
 
     <div class="row row-cols-6 mb-3">
       <div class="col">
-        <%= f.label :start_interval, class: "form-label" %>
-        <%= f.text_field :start_interval, class: "form-control" %>
-        <span class="form-text">Run at this interval (seconds)</span>
+        <%= f.input :start_interval, hint: "Run at this interval (seconds)" %>
       </div>
       <div class="col">
-        <%= f.label :minute, class: "form-label" %>
-        <%= f.text_field :minute, class: "form-control" %>
-        <span class="form-text">Cron syntax: <code>0-59</code>, <code>0,30</code>, <code>*/5</code></span>
+        <%= f.input :minute, hint: "Cron syntax: <code>0-59</code>, <code>0,30</code>, <code>*/5</code>".html_safe %>
       </div>
       <div class="col">
-        <%= f.label :hour, class: "form-label" %>
-        <%= f.text_field :hour, class: "form-control" %>
-        <span class="form-text">Cron: <code>0-23</code>, <code>0,12</code>, <code>*/3</code></span>
+        <%= f.input :hour, hint: "Cron: <code>0-23</code>, <code>0,12</code>, <code>*/3</code>, etc.".html_safe %>
       </div>
       <div class="col">
-        <%= f.label :day_of_month, class: "form-label" %>
-        <%= f.text_field :day_of_month, class: "form-control" %>
-        <span class="form-text">Cron: <code>1-31</code>, <code>1,15</code>, <code>*/3</code></span>
+        <%= f.input :day_of_month, hint: "Cron: <code>1-31</code>, <code>1,15</code>, <code>*/3</code>, etc.".html_safe %>
       </div>
       <div class="col">
-        <%= f.label :month, class: "form-label" %>
-        <%= f.text_field :month, class: "form-control" %>
-        <span class="form-text">Cron: <code>1-12</code>, <code>1,7</code>, <code>*</code>, <code>*/3</code></span>
+        <%= f.input :month, hint: "Cron: <code>1-12</code>, <code>1,7</code>, <code>*/3</code>, etc.".html_safe %>
       </div>
       <div class="col">
-        <%= f.label :weekday, class: "form-label" %>
-        <%= f.text_field :weekday, class: "form-control" %>
-        <span class="form-text">Cron: <code>0-6</code>, <code>0,3</code>, <code>*</code></span>
+        <%= f.input :weekday, hint: "Cron: <code>0-6</code>, <code>0,3</code>, etc.".html_safe %>
       </div>
     </div>
     <p>If no schedule is defined, launchd will keep the program running at all times.</p>
@@ -61,39 +41,29 @@
     <legend class="border-bottom">Runtime</legend>
     <div class="row mb-3">
       <div class="col">
-        <%= f.label :user, class: "form-label" %>
-        <%= f.text_field :user, class: "form-control" %>
-        <span class="form-text">Run as this user</span>
+        <%= f.input :user, hint: "Run as this user" %>
       </div>
       <div class="col">
-        <%= f.label :group, class: "form-label" %>
-        <%= f.text_field :group, class: "form-control" %>
-        <span class="form-text">and/or this group</span>
+        <%= f.input :group, hint: "and/or this group" %>
       </div>
     </div>
     <div class="row mb-3">
       <div class="col">
-        <%= f.label :working_directory, class: "form-label" %>
-        <%= f.text_field :working_directory, class: "form-control" %>
-        <span class="form-text">Run in this working directory</span>
+        <%= f.input :working_directory, hint: "Run in this working directory" %>
       </div>
       <div class="col">
-        <%= f.label :root_directory, class: "form-label" %>
-        <%= f.text_field :root_directory, class: "form-control" %>
-        <span class="form-text">Run with chroot in this directory</span>
+        <%= f.input :root_directory, hint: "Run with chroot in this directory" %>
       </div>
     </div>
   </fieldset>
 
   <div class="row border-top pt-3">
     <% unless @plist.new_record? -%>
-      <p>
         <span class="label label-warning">Notice</span>
         For security, editing a .plist creates a new, different entry.
-      </p>
     <% end -%>
     <div class="col-auto ms-auto">
-      <%= f.submit "Create Plist", class: "btn btn-primary" %>
+      <%= f.button :submit, "Create Plist", class: "btn-primary" %>
     </div>
   </div>
 <% end %>
