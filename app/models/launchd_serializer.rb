@@ -13,7 +13,7 @@ class LaunchdSerializer
 
   def attribute_hash
     {}.tap do |attrs|
-      attrs["Label"] = Launched::Application::DOMAIN + "." + plist.label
+      attrs["Label"] = Launched::DOMAIN + "." + plist.label
       attrs["ProgramArguments"] = [ "sh", "-c", plist.command]
 
       if intervals = calendar_intervals

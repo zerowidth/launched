@@ -20,10 +20,9 @@ require "sprockets/railtie"
 Bundler.require(*Rails.groups)
 
 module Launched
+  DOMAIN = "launched"
 
   class Application < Rails::Application
-    DOMAIN = "com.zerowidth.launched"
-
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.1
 

@@ -23,7 +23,7 @@ describe LaunchdSerializer do
     end
 
     it "includes the job name as a fully qualified label" do
-      expect(xml["Label"]).to eq("com.zerowidth.launched.hello_world")
+      expect(xml["Label"]).to eq("#{Launched::DOMAIN}.hello_world")
     end
 
     it "includes the command in ProgramArguments" do
