@@ -69,7 +69,7 @@ class LaunchdPlist
   def initialize(...)
     super
     self.created_at ||= Time.now.utc
-    self.uuid ||= UUID.generate
+    self.uuid ||= Digest::UUID.uuid_v4
     self.persisted = false
   end
 
