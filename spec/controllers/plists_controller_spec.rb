@@ -82,6 +82,7 @@ describe PlistsController do
     it "is successful" do
       get :install, params: { id: plist.uuid }
       expect(response).to be_successful
+      expect(response.headers["Content-Type"]).to include("text/plain")
     end
   end
 end
