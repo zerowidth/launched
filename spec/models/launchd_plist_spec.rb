@@ -1,6 +1,13 @@
 require "spec_helper"
 
 describe LaunchdPlist do
+  before do
+    REDIS.with do |redis|
+      redis.scan_each(match: "#{LaunchdPlist.namespace}:*").each do |key|
+        redis.del key
+      end
+    end
+  end
 
   let :plist do
     LaunchdPlist.new(
@@ -11,14 +18,26 @@ describe LaunchdPlist do
     )
   end
 
+  it "is valid" do
+    expect(plist).to be_valid
+  end
+
   describe "when saving to the database" do
     it "creates a record in the db" do
-      expect { plist.save! }.to change(LaunchdPlist, :count).by(1)
+      expect { plist.save }.to change(LaunchdPlist, :count).by(1)
+    end
+
+    it "retrieves a previously saved record" do
+      plist.save
+      from_db = LaunchdPlist.find(plist.uuid)
+      expect(from_db).to be_present
+      expect(from_db.attributes.except("created_at")).to eq(plist.attributes.except("created_at"))
+      expect(from_db.attributes["created_at"].to_i).to eq(plist.attributes["created_at"].to_i)
     end
 
     it "generates a UUID for the plist" do
-      plist.save!
-      expect(plist.uuid).to_not be_nil
+      expect(plist.save).to be true
+      expect(plist.uuid&.length).to eq(36)
     end
 
     it "disallows invalid minute values" do

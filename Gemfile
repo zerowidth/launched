@@ -13,6 +13,7 @@ gem 'sass-rails', '>= 6'
 # gem 'bcrypt', '~> 3.1.7'
 
 gem "bootstrap"
+gem "connection_pool"
 gem "plist"
 gem "redis"
 gem "uuid"

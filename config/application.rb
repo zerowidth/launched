@@ -20,6 +20,7 @@ require "sprockets/railtie"
 Bundler.require(*Rails.groups)
 
 module Launched
+
   class Application < Rails::Application
     DOMAIN = "com.zerowidth.launched"
 

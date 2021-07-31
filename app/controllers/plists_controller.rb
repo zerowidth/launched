@@ -44,6 +44,6 @@ class PlistsController < ApplicationController
   end
 
   def find_plist_by_uuid
-    @plist = LaunchdPlist.find_by_uuid(params[:id]) or raise ActiveRecord::RecordNotFound
+    @plist = LaunchdPlist.find(params[:id]) || raise(ActionController::RoutingError, "not found")
   end
 end
