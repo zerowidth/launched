@@ -1,4 +1,4 @@
-<%= simple_form_for @plist, as: :plist, url: plists_path do |f| %>
+<%= simple_form_for @plist, as: :plist, method: :post, url: plists_path do |f| %>
   <fieldset>
     <legend class="border-bottom">Basics</legend>
     <div class="row mb-3">
@@ -59,8 +59,10 @@
 
   <div class="row border-top pt-3">
     <% unless @plist.new_record? -%>
-        <span class="label label-warning">Notice</span>
-        For security, editing a .plist creates a new, different entry.
+      <div class="col">
+        <span class="badge bg-info text-dark">Note</span>
+        updating a plist creates a new one with a different UUID.
+      </div>
     <% end -%>
     <div class="col-auto ms-auto">
       <%= f.button :submit, "Create Plist", class: "btn-primary" %>
