@@ -426,8 +426,8 @@ SimpleForm.setup do |config|
     time:          :vertical_multi_select
   }
 
-  # same as the vertical form wrapper, but with a `<tt>` prefix on the input field
-  config.wrappers :tt_prefix, tag: 'div', class: 'form-group', error_class: 'form-group-invalid', valid_class: 'form-group-valid' do |b|
+  # same as the vertical form wrapper, but with a `<code>` prefix on the input field
+  config.wrappers :code_prefix, tag: 'div', class: 'form-group', error_class: 'form-group-invalid', valid_class: 'form-group-valid' do |b|
     b.use :html5
     b.use :placeholder
     b.optional :maxlength
@@ -438,7 +438,7 @@ SimpleForm.setup do |config|
     b.use :label, class: "form-label"
     b.wrapper :div, class: "input-group" do |group|
       group.wrapper :span, class: "input-group-text" do |span|
-        span.use :prefix, wrap_with: { tag: "tt" }
+        span.use :prefix, wrap_with: { tag: "code" }
       end
       group.use :input, class: 'form-control', error_class: 'is-invalid', valid_class: 'is-valid'
     end

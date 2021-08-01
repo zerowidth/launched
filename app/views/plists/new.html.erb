@@ -3,10 +3,10 @@
     <legend class="border-bottom">Basics</legend>
     <div class="row mb-3">
       <div class="col">
-        <%= f.input :name, wrapper: :tt_prefix, prefix: "#{Launched::DOMAIN}." %>
+        <%= f.input :name, wrapper: :code_prefix, prefix: "#{Launched::DOMAIN}." %>
       </div>
       <div class="col">
-        <%= f.input :command, wrapper: :tt_prefix, prefix: "sh -c" %>
+        <%= f.input :command, wrapper: :code_prefix, prefix: "sh -c" %>
       </div>
     </div>
   </fieldset>

@@ -1,3 +1,4 @@
+<%- filename = Launched::DOMAIN + "." + @plist.label + ".plist" -%>
 <h2 class="border-bottom pb-1 mb-3"><%= @plist.label %>.plist</h2>
 
 <p>
@@ -7,7 +8,7 @@
     <%= link_to "view raw", plist_path(@plist.uuid, :format => :xml) %> &middot;
     <%= link_to "download", plist_path(@plist.uuid, :format => :xml, :download => true) %>
   </span>
-  <tt><%= @plist.label %>.plist</tt> running <tt><%= @plist.command %></tt>:
+  <code><%= filename %></code> running <code><%= @plist.command %></code>:
 </p>
 <pre id="plist_xml" class="bg-light p-3 mb-3"><code><%= @plist_xml %></code></pre>
 
@@ -19,8 +20,6 @@
 </p>
 
 <p>To install manually:</p>
-
-<% filename = Launched::DOMAIN + "." + @plist.label + ".plist" -%>
 
 <pre class="bg-light p-3"><code>mkdir -p ~/Library/LaunchAgents
 curl -o ~/Library/LaunchAgents/<%= filename %> <%= plist_url @plist.uuid, :format => :xml %>
