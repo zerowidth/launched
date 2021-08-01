@@ -12,3 +12,9 @@
 //
 //= require_tree .
 new ClipboardJS('.clipboard');
+window.onload = function() {
+  element = document.getElementById("plist_name");
+  if(element != null) {
+    element.focus();
+  }
+};
