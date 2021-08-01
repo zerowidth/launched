@@ -56,9 +56,10 @@ class LaunchdPlist
 
   def self.find(uuid)
     REDIS.with do |redis|
-      if (json = redis.get("#{namespace}:#{uuid}"))
+      hash = redis.hgetall("#{namespace}:#{uuid}")
+      unless hash.empty?
         plist = new
-        plist.from_json(json)
+        plist.attributes = hash
         plist.uuid = uuid
         plist.persisted = true
         plist
@@ -66,17 +67,13 @@ class LaunchdPlist
     end
   end
 
+  attr_accessor :persisted
+
   def initialize(...)
     super
     self.created_at ||= Time.now.utc
     self.uuid ||= Digest::UUID.uuid_v4
     self.persisted = false
-  end
-
-  attr_accessor :persisted
-
-  def persisted?
-    persisted
   end
 
   def new_record?
@@ -87,7 +84,7 @@ class LaunchdPlist
     return false unless valid?
 
     REDIS.with do |redis|
-      redis.set("#{self.class.namespace}:#{uuid}", to_json)
+      redis.hset("#{self.class.namespace}:#{uuid}", serializable_hash)
     end
     self.persisted = true
     true
@@ -109,13 +106,12 @@ class LaunchdPlist
       "root_directory" => root_directory,
       "working_directory" => working_directory,
       "created_at" => created_at
-    }
+    }.reject { |_k, v| v.blank? }
   end
 
-  # for from_json support
   def attributes=(hash)
     hash.each do |key, value|
-      send("#{key}=", value)
+      send("#{key}=", value) if respond_to?("#{key}=")
     end
   end
 

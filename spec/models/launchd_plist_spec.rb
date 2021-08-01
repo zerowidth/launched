@@ -25,6 +25,16 @@ describe LaunchdPlist do
     expect(plist).to be_valid
   end
 
+  describe "attributes" do
+    it "leaves off nil entries" do
+      expect(plist.attributes.keys).to match_array(%w[name command weekday month created_at])
+    end
+
+    it "leaves off empty entries" do
+      expect(LaunchdPlist.new(name: "").attributes.keys).to_not include("name")
+    end
+  end
+
   describe "when saving to the database" do
     it "creates a record in the db" do
       expect { plist.save }.to change(LaunchdPlist, :count).by(1)
