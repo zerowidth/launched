@@ -1,15 +1,15 @@
-<h2 class="border-bottom mb-3"><%= @plist.label %>.plist</h2>
+<h2 class="border-bottom pb-1 mb-3"><%= @plist.label %>.plist</h2>
 
-<p><tt><%= @plist.label %>.plist</tt> running <tt><%= @plist.command %></tt>:</p>
-<div class="bg-light p-3 mb-3">
+<p>
   <span class="float-end">
     <%= link_to "edit", edit_plist_path(@plist.uuid) %> &middot;
     <a href="#" class="clipboard" data-clipboard-target="#plist_xml">copy to clipboard</a> &middot;
     <%= link_to "view raw", plist_path(@plist.uuid, :format => :xml) %> &middot;
     <%= link_to "download", plist_path(@plist.uuid, :format => :xml, :download => true) %>
   </span>
-  <pre id="plist_xml"><code><%= @plist_xml %></code></pre>
-</div>
+  <tt><%= @plist.label %>.plist</tt> running <tt><%= @plist.command %></tt>:
+</p>
+<pre id="plist_xml" class="bg-light p-3 mb-3"><code><%= @plist_xml %></code></pre>
 
 <p>
   To install:
