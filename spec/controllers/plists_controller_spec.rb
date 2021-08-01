@@ -1,25 +1,35 @@
 require "rails_helper"
 
 describe PlistsController do
+  before do
+    REDIS.with do |redis|
+      redis.scan_each(match: "#{LaunchdPlist.namespace}:*").each do |key|
+        redis.del key
+      end
+    end
+  end
 
   let :plist do
-    LaunchdPlist.create! :name => "test", :command => "ls", :interval => "300"
+    p = LaunchdPlist.new(name: "test", command: "ls", start_interval: "300")
+    unless p.save
+      raise p.errors.inspect
+    end
+    p
   end
 
   describe "POST to create" do
-
-    def create(overrides={})
+    def create(overrides = {})
       post :create,
-        params: { :plist => {
-          :name => "test command",
-          :command => "echo hello",
-          :interval => "300"
+        params: { plist: {
+          name: "test command",
+          command: "echo hello",
+          start_interval: "300",
         }.merge(overrides) }
     end
 
-    it "redirects to the new plist path, using uuid as the id" do
+    it "redirects to the new plist path" do
       create
-      plist = LaunchdPlist.last
+      plist = LaunchdPlist.all.first
       expect(response).to redirect_to(plist_path(plist.uuid))
     end
 
@@ -29,17 +39,14 @@ describe PlistsController do
   end
 
   describe "GET to show with a UUID" do
-
     context "when requesting xml" do
-      before do
-        get :show, params: { id: plist.uuid }, :format => :xml
-      end
-
       it "renders an xml plist with the xml format" do
+        get :show, params: { id: plist.uuid }, format: :xml
         expect(response.body).to match(/xml.*StartInterval/m)
       end
 
-      it "sets the content-disposition header" do
+      it "sets the content-disposition header when download is set to true" do
+        get :show, params: { id: plist.uuid, download: true }, format: :xml
         expect(response.headers["Content-Disposition"]).to match(/attachment.*test\.xml/)
       end
     end
@@ -51,9 +58,8 @@ describe PlistsController do
     end
 
     it "raises a record not found error for invalid ids" do
-      expect { get :show, params: { id: 'lol' } }.to raise_error(ActiveRecord::RecordNotFound)
+      expect { get :show, params: { id: "lol" }, format: :xml }.to raise_error(ActionController::RoutingError)
     end
-
   end
 
   describe "GET to edit with a UUID" do
@@ -67,8 +73,8 @@ describe PlistsController do
       expect(response).to render_template("new")
     end
 
-    it "raises a record not found error for invalid ids" do
-      expect { get :edit, params: { id: 'lol' } }.to raise_error(ActiveRecord::RecordNotFound)
+    it "raises an error for invalid ids" do
+      expect { get :edit, params: { id: "lol" } }.to raise_error(ActionController::RoutingError)
     end
   end
 
@@ -76,6 +82,7 @@ describe PlistsController do
     it "is successful" do
       get :install, params: { id: plist.uuid }
       expect(response).to be_successful
+      expect(response.headers["Content-Type"]).to include("text/plain")
     end
   end
 end

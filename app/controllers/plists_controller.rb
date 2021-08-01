@@ -20,9 +20,11 @@ class PlistsController < ApplicationController
 
     respond_to do |format|
       format.xml do
-        filename = "#{Launched::Application::DOMAIN}.#{@plist.label}.xml"
-        headers["Content-Disposition"] =
-          %(attachment; filename="#{filename}"; size=#{@plist_xml.length})
+        filename = "#{Launched::DOMAIN}.#{@plist.label}.xml"
+        if params["download"]
+          headers["Content-Disposition"] =
+            %(attachment; filename="#{filename}"; size=#{@plist_xml.length})
+        end
         render xml: @plist_xml
       end
       format.html
@@ -40,10 +42,10 @@ class PlistsController < ApplicationController
   protected
 
   def plist_params
-    params.require(:plist).permit(:name, :command, :interval)
+    params.require(:plist).permit(:name, :command, :start_interval, :minute, :hour, :day_of_month, :month, :weekday, :user, :group, :working_directory, :root_directory)
   end
 
   def find_plist_by_uuid
-    @plist = LaunchdPlist.find_by_uuid(params[:id]) or raise ActiveRecord::RecordNotFound
+    @plist = LaunchdPlist.find(params[:id]) || raise(ActionController::RoutingError, "not found")
   end
 end

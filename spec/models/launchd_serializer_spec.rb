@@ -23,7 +23,7 @@ describe LaunchdSerializer do
     end
 
     it "includes the job name as a fully qualified label" do
-      expect(xml["Label"]).to eq("com.zerowidth.launched.hello_world")
+      expect(xml["Label"]).to eq("#{Launched::DOMAIN}.hello_world")
     end
 
     it "includes the command in ProgramArguments" do
@@ -52,7 +52,7 @@ describe LaunchdSerializer do
 
     context "with a weekday list specified" do
       it "sets the weekdays to run" do
-        plist.weekdays = "1,5"
+        plist.weekday = "1,5"
         expect(xml["StartCalendarInterval"]).to match_array([
           {"Weekday" => 1},
           {"Weekday" => 5}
@@ -60,24 +60,10 @@ describe LaunchdSerializer do
       end
     end
 
-    context "with a run interval" do
+    context "with a start interval" do
       it "sets the StartInterval key" do
-        plist.interval = 300
+        plist.start_interval = 300
         expect(xml["StartInterval"]).to be(300)
-      end
-    end
-
-    context "with run at load set" do
-      it "sets the RunAtLoad boolean" do
-        plist.run_at_load = true
-        expect(xml["RunAtLoad"]).to be(true)
-      end
-    end
-
-    context "when the plist is safe to launch only once" do
-      it "sets LaunchOnlyOnce to true" do
-        plist.launch_only_once = true
-        expect(xml["LaunchOnlyOnce"]).to be(true)
       end
     end
 

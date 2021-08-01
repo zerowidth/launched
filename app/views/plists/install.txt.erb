@@ -1,4 +1,4 @@
-<% filename = Launched::Application::DOMAIN + "." + @plist.label + ".plist" -%>
+<% filename = Launched::DOMAIN + "." + @plist.label + ".plist" -%>
 echo downloading <%= filename %>...
 mkdir -p ~/Library/LaunchAgents
 curl -o ~/Library/LaunchAgents/<%= filename %> <%= plist_url @plist.uuid, :format => :xml %>
