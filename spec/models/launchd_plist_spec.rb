@@ -41,12 +41,28 @@ describe LaunchdPlist do
     end
 
     it "retrieves a previously saved record" do
-      plist.save
+      attributes = {
+        name: "testing",
+        command: "echo hello world",
+        start_interval: 10,
+        minute: "0",
+        hour: "12",
+        day_of_month: "*/2",
+        month: "*",
+        weekday: "1,3,5",
+        user: "whoami",
+        group: "wheel",
+        root_directory: "/Users/whoami",
+        working_directory: "/tmp",
+        standard_out_path: "/var/log/stdout.log",
+        standard_error_path: "/var/log/stderr.log",
+      }.stringify_keys
+      plist = LaunchdPlist.new(attributes)
+      expect(plist.save).to be true
       from_db = LaunchdPlist.find(plist.uuid)
       expect(from_db).to be_present
-      expect(from_db.attributes.except("created_at")).to eq(plist.attributes.except("created_at"))
+      expect(from_db.attributes.except("created_at")).to eq(attributes.except("created_at"))
       expect(from_db.created_at.to_i).to eq(plist.created_at.to_i)
-      expect(from_db.start_interval).to be_nil
     end
 
     it "generates a UUID for the plist" do
