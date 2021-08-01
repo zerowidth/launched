@@ -11,6 +11,4 @@
 // GO AFTER THE REQUIRES BELOW.
 //
 //= require_tree .
-//= require jquery3
-//= require popper
-//= require bootstrap-sprockets
+new ClipboardJS('.clipboard');
