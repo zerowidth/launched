@@ -1,11 +1,11 @@
-require 'spec_helper'
+require "rails_helper"
 
 describe PagesController do
 
   describe "GET 'help'" do
     it "returns http success" do
       get 'help'
-      response.should be_success
+      expect(response).to be_successful
     end
   end
 

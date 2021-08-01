@@ -1,4 +1,4 @@
-require "spec_helper"
+require "rails_helper"
 
 describe LaunchdSerializer do
 
@@ -19,25 +19,23 @@ describe LaunchdSerializer do
 
   describe "#to_plist" do
     it "returns an xml string" do
-      serializer.to_plist.should =~ /xml/
+      expect(serializer.to_plist).to match(/xml/)
     end
 
     it "includes the job name as a fully qualified label" do
-      xml["Label"].should == "com.zerowidth.launched.hello_world"
+      expect(xml["Label"]).to eq("#{Launched::DOMAIN}.hello_world")
     end
 
     it "includes the command in ProgramArguments" do
       args = xml["ProgramArguments"]
-      args.should have(3).items
-      args.last.should =~ /growlnotify/
+      expect(args.length).to be(3)
+      expect(args.last).to match(/growlnotify/)
     end
 
     context "with a single minute specified" do
       it "sets a single StartCalendarInterval" do
         plist.minute = "10"
-        xml["StartCalendarInterval"].should == {
-          "Minute" => 10
-        }
+        expect(xml["StartCalendarInterval"]).to eq("Minute" => 10)
       end
     end
 
@@ -45,7 +43,7 @@ describe LaunchdSerializer do
       it "sets multiple StartCalendarIntervals" do
         plist.minute = "0"
         plist.hour = "8,17"
-        xml["StartCalendarInterval"].should == [
+        expect(xml["StartCalendarInterval"]).to match_array [
           {"Minute" => 0, "Hour" => 8},
           {"Minute" => 0, "Hour" => 17}
         ]
@@ -54,80 +52,66 @@ describe LaunchdSerializer do
 
     context "with a weekday list specified" do
       it "sets the weekdays to run" do
-        plist.weekdays = "1,5"
-        xml["StartCalendarInterval"].should == [
+        plist.weekday = "1,5"
+        expect(xml["StartCalendarInterval"]).to match_array([
           {"Weekday" => 1},
           {"Weekday" => 5}
-        ]
+        ])
       end
     end
 
-    context "with a run interval" do
+    context "with a start interval" do
       it "sets the StartInterval key" do
-        plist.interval = 300
-        xml["StartInterval"].should == 300
-      end
-    end
-
-    context "with run at load set" do
-      it "sets the RunAtLoad boolean" do
-        plist.run_at_load = true
-        xml["RunAtLoad"].should == true
-      end
-    end
-
-    context "when the plist is safe to launch only once" do
-      it "sets LaunchOnlyOnce to true" do
-        plist.launch_only_once = true
-        xml["LaunchOnlyOnce"].should == true
+        plist.start_interval = 300
+        expect(xml["StartInterval"]).to be(300)
       end
     end
 
     context "when a user is set" do
       it "sets UserName" do
         plist.user = "bobby"
-        xml["UserName"].should == "bobby"
+        expect(xml["UserName"]).to eq("bobby")
       end
 
       it "does not set UserName when user is an empty string" do
         plist.user = ""
-        xml["UserName"].should == nil
+        expect(xml["UserName"]).to be_nil
       end
     end
 
     context "when a group is set" do
       it "sets GroupName" do
         plist.group = "wheel"
-        xml["GroupName"].should == "wheel"
+        expect(xml["GroupName"]).to eq "wheel"
       end
 
       it "does not set GroupName with an empty string" do
         plist.group = ""
-        xml["GroupName"].should == nil
+        expect(xml["GroupName"]).to be_nil
       end
     end
 
     context "with a root directory set" do
       it "sets RootDirectory" do
         plist.root_directory = "/tmp"
-        xml["RootDirectory"].should == "/tmp"
+        expect(xml["RootDirectory"]).to eq "/tmp"
       end
 
       it "deos not set RootDirectory when root directory is a blank string" do
         plist.root_directory = ""
-        xml["RootDirectory"].should == nil
+        expect(xml["RootDirectory"]).to be_nil
       end
     end
 
     context "with a working directory set" do
       it "sets WorkingDirectory" do
         plist.working_directory = "/tmp"
-        xml["WorkingDirectory"].should == "/tmp"
+        expect(xml["WorkingDirectory"]).to eq "/tmp"
       end
 
       it "does not set WorkingDirectory when working directory is a blank string" do
         plist.working_directory = ""
-        xml["WorkingDirectory"].should == nil
+        expect(xml["WorkingDirectory"]).to be_nil
       end
     end
   end

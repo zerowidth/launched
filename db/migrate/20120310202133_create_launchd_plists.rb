@@ -1,4 +1,4 @@
-class CreateLaunchdPlists < ActiveRecord::Migration
+class CreateLaunchdPlists < ActiveRecord::Migration[4.2]
   def change
     create_table :launchd_plists do |t|
       t.string :uuid,     :limit => 36,   :null => false

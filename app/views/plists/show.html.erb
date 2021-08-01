@@ -1,37 +1,33 @@
-<script type="text/javascript" charset="utf-8">
-  $(function(){ plist.show_init(); });
-</script>
-<h2><%= @plist.label %>.plist</h2>
+<%- filename = Launched::DOMAIN + "." + @plist.label + ".plist" -%>
+<h2 class="border-bottom pb-1 mb-3"><%= @plist.label %>.plist</h2>
 
-<h3>Install</h3>
 <p>
-  <code id="install">curl <%= install_plist_url(@plist.uuid) %> | sh</code>
-  <a href="#" title="copy to clipboard" class="install"><i class="icon-share"></i></a> |
-  <%= link_to "source", install_plist_path(@plist.uuid) %>
+  <span class="float-end">
+    <%= link_to "edit", edit_plist_path(@plist.uuid) %> &middot;
+    <a href="#" class="clipboard" data-clipboard-target="#plist_xml">copy to clipboard</a> &middot;
+    <%= link_to "view raw", plist_path(@plist.uuid, :format => :xml) %> &middot;
+    <%= link_to "download", plist_path(@plist.uuid, :format => :xml, :download => true) %>
+  </span>
+  <code><%= filename %></code> running <code><%= @plist.command %></code>:
+</p>
+<pre id="plist_xml" class="bg-light p-3 mb-3"><code><%= @plist_xml %></code></pre>
+
+<p>
+  To install:
+  <code class="bg-light p-1 me-1" id="install">curl <%= install_plist_url(@plist.uuid) %> | sh</code>
+  <a href="#" class="clipboard" data-clipboard-target="#install">copy to clipboard</a> &middot;
+  <%= link_to "view install script", install_plist_path(@plist.uuid) %>
 </p>
 
-<h3>Your .plist</h3>
-<p class="pull-right">
-  <a href="#" title="copy to clipboard" class="plist_xml"><i class="icon-share"></i></a> |
-  <%= link_to "edit", edit_plist_path(@plist.uuid) %> |
-  <%= link_to "download", plist_path(@plist.uuid, :format => :xml) %>
-</p>
+<p>To install manually:</p>
 
-<p><tt><%= @plist.label %>.plist</tt> running <code><%= @plist.command %></code>:</p>
-<pre id="plist_xml"><code><%= @plist_xml %></code></pre>
-
-<h3>Manual Install</h3>
-
-<% filename = Launched::Application::DOMAIN + "." + @plist.label + ".plist" -%>
-
-<p>Manual install:</p>
-<pre><code>mkdir -p ~/Library/LaunchAgents
+<pre class="bg-light p-3"><code>mkdir -p ~/Library/LaunchAgents
 curl -o ~/Library/LaunchAgents/<%= filename %> <%= plist_url @plist.uuid, :format => :xml %>
 launchctl load -w ~/Library/LaunchAgents/<%= filename %>
 </code></pre>
 
 <p>Or, to install as root:</p>
-<pre><code>curl -o ~/Downloads/<%= filename %> <%= plist_url @plist.uuid, :format => :xml %>
+<pre class="bg-light p-3"><code>curl -o ~/Downloads/<%= filename %> <%= plist_url @plist.uuid, :format => :xml %>
 sudo cp ~/Downloads/<%= filename %> /Library/LaunchDaemons
 sudo launchctl load -w /Library/LaunchDaemons/<%= filename %>
 </code></pre>

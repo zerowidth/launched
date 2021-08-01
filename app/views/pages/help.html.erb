@@ -1,5 +1,3 @@
-<h2>Help!</h2>
-
 <h3>What is this, anyway?</h3>
 
 <p>
@@ -12,8 +10,8 @@
 </p>
 
 <p>
-  That's where this application comes in. It's designed to be a simple way to
-  generate common cron-style launchd plist files for use on your own system.
+  That's where this application comes in. It's a simple way to generate common
+  cron-style launchd plist files for use on your own system.
 </p>
 
 <h3>Installing a plist</h3>
@@ -24,10 +22,10 @@
 mkdir -p ~/Library/LaunchAgents
 
 # Put your plist in this directory
-cp ~/Downloads/<%= Launched::Application::DOMAIN %>.your_script.plist ~/Library/LaunchAgents
+cp ~/Downloads/<%= Launched::DOMAIN %>.your_script.plist ~/Library/LaunchAgents
 
 # And load it up with launchctl:
-launchctl load -w ~/Library/LaunchAgents/<%= Launched::Application::DOMAIN %>.your_script.plist
+launchctl load -w ~/Library/LaunchAgents/<%= Launched::DOMAIN %>.your_script.plist
 </code></pre>
 
 <p>
@@ -36,10 +34,10 @@ launchctl load -w ~/Library/LaunchAgents/<%= Launched::Application::DOMAIN %>.yo
 </p>
 
 <pre><code># Put your plist in the system directory
-sudo cp ~/Downloads/<%= Launched::Application::DOMAIN %>.your_script.plist /Library/LaunchDaemons
+sudo cp ~/Downloads/<%= Launched::DOMAIN %>.your_script.plist /Library/LaunchDaemons
 
 # And load it up with launchctl:
-sudo launchctl load -w /Library/LaunchDaemons/<%= Launched::Application::DOMAIN %>.your_script.plist
+sudo launchctl load -w /Library/LaunchDaemons/<%= Launched::DOMAIN %>.your_script.plist
 </code></pre>
 
 <p>
@@ -61,23 +59,23 @@ sudo launchctl load -w /Library/LaunchDaemons/<%= Launched::Application::DOMAIN 
   If your plist doesn't seem to be running correctly, you can debug it by
   looking at the logs in console.app. Fortunately, launchd prefixes any activity
   with the label defined in your plist. So, continuing with the above example,
-  search for <code><%= Launched::Application::DOMAIN %>.your_script</code> to
+  search for <code><%= Launched::DOMAIN %>.your_script</code> to
   find any log entries related to your job.
 </p>
 
 <h3>Isn't there a tool to make this easier?</h3>
 
 <p>
-  Yes. <code>gem install lunchy &amp;&amp; lunchy --help</code>
+  Yes. <code>brew install lunchy &amp;&amp; lunchy --help</code>
 </p>
 
 <h3>Privacy and Security</h3>
 
 <p>
   This application has no way of listing the plists that have been created so
-  far, and each plist is identified by a UUID rather than an incrementing id, to
-  make enumeration difficult. Still, you should ensure that you keep private
-  data out of the plists if possible.
+  far, and each plist is identified by a UUID rather than an incrementing id to
+  prevent enumeration. Still, you should ensure that you keep private data out
+  of the plists if possible.
 </p>
 
 <p>
@@ -90,11 +88,3 @@ sudo launchctl load -w /Library/LaunchDaemons/<%= Launched::Application::DOMAIN 
 <pre><code>man launchd
 man launchd.plist
 </code></pre>
-
-<h3>Who's responsible for this nonsense?</h3>
-
-<p>
-  Feel free to blame <a href="http://zerowidth.com/about.html">Nathan Witmer</a>. Want to
-  contribute? Find this on
-  <a href="https://github.com/zerowidth/launched">github</a>.
-</p>

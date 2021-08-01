@@ -1,56 +1,36 @@
 source 'https://rubygems.org'
+git_source(:github) { |repo| "https://github.com/#{repo}.git" }
 
-ruby "1.9.3"
+ruby '3.0.2'
 
-gem 'rake'
-gem 'rails', '~> 3.2.2'
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails', branch: 'main'
+gem 'rails', '~> 6.1.4'
+# Use Puma as the app server
+gem 'puma', '~> 5.0'
+# Use SCSS for stylesheets
+gem 'sass-rails', '>= 6'
+# Use Active Model has_secure_password
+# gem 'bcrypt', '~> 3.1.7'
 
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
-
-gem "pg"
-gem "uuid"
+gem "bootstrap"
+gem "connection_pool"
 gem "plist"
-gem 'anjlab-bootstrap-rails', :require => 'bootstrap-rails',
-                              :git => 'git://github.com/anjlab/bootstrap-rails.git'
-
-gem "thin"
-
-# Gems used only for assets and not required
-# in production environments by default.
-group :assets do
-  gem 'sass-rails',   '~> 3.2.3'
-  gem 'coffee-rails', '~> 3.2.1'
-
-  # See https://github.com/sstephenson/execjs#readme for more supported runtimes
-  # gem 'therubyracer'
-
-  gem 'uglifier', '>= 1.0.3'
-end
-
-gem 'jquery-rails'
-
-# To use ActiveModel has_secure_password
-# gem 'bcrypt-ruby', '~> 3.0.0'
-
-# To use Jbuilder templates for JSON
-# gem 'jbuilder'
-
-# Use unicorn as the web server
-# gem 'unicorn'
-
-# Deploy with Capistrano
-# gem 'capistrano'
-
-# To use debugger
-# gem 'ruby-debug19', :require => 'ruby-debug'
+gem "redis"
+gem "simple_form"
 
 group :development, :test do
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
   gem "rspec-rails"
-  gem "guard-rspec"
+end
+
+group :development do
+  gem 'listen', '~> 3.3'
 end
 
 group :test do
-  gem "rb-fsevent"
-  gem "growl"
+  gem "rails-controller-testing"
 end
+
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]

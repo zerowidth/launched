@@ -1,59 +1,69 @@
 require "spec_helper"
 
 describe LaunchdPlist do
+  before do
+    REDIS.with do |redis|
+      redis.scan_each(match: "#{LaunchdPlist.namespace}:*").each do |key|
+        redis.del key
+      end
+    end
+  end
 
   let :plist do
     LaunchdPlist.new(
       :name => "Hello World",
       :command => 'growlnotify -m "hello!"',
-      :weekdays => "1,2,3,4,5",
-      :months => "1,4,7,10"
+      :weekday => "1,2,3,4,5",
+      :month => "1,4,7,10"
     )
+  end
+
+  let(:active_model_instance) { plist }
+  it_behaves_like "ActiveModel"
+
+  it "is valid" do
+    expect(plist).to be_valid
+  end
+
+  describe "attributes" do
+    it "leaves off nil entries" do
+      expect(plist.attributes.keys).to match_array(%w[name command weekday month created_at])
+    end
+
+    it "leaves off empty entries" do
+      expect(LaunchdPlist.new(name: "").attributes.keys).to_not include("name")
+    end
   end
 
   describe "when saving to the database" do
     it "creates a record in the db" do
-      lambda { plist.save! }.should change(LaunchdPlist, :count).by(1)
+      expect { plist.save }.to change(LaunchdPlist, :count).by(1)
+    end
+
+    it "retrieves a previously saved record" do
+      plist.save
+      from_db = LaunchdPlist.find(plist.uuid)
+      expect(from_db).to be_present
+      expect(from_db.attributes.except("created_at")).to eq(plist.attributes.except("created_at"))
+      expect(from_db.created_at.to_i).to eq(plist.created_at.to_i)
+      expect(from_db.start_interval).to be_nil
     end
 
     it "generates a UUID for the plist" do
-      plist.save!
-      plist.uuid.should_not be_nil
+      expect(plist.save).to be true
+      expect(plist.uuid&.length).to eq(36)
     end
 
     it "disallows invalid minute values" do
       plist.minute = "iamaspammer"
-      plist.save
-      plist.should have(1).error_on(:minute)
+      expect(plist).to_not be_valid
+      expect(plist.errors[:minute]).to be_present
     end
   end
 
   describe "#label" do
     it "returns a computer-readable version of the name" do
-      plist.label.should == "hello_world"
+      expect(plist.label).to eq("hello_world")
     end
   end
-
-  describe "#month_list" do
-    it "returns an integer array of months" do
-      plist.month_list.should == [1,4,7,10]
-    end
-
-    it "returns an empty array when months is nil" do
-      plist.months = nil
-      plist.month_list.should == []
-    end
-  end
-
-  describe "weekday_list" do
-    it "returns an integer array of weekdays" do
-      plist.weekday_list.should == [1,2,3,4,5]
-    end
-
-    it "returns an empty array when weekdays is nil" do
-      plist.weekdays = nil
-      plist.weekday_list.should == []
-    end
-  end
-
 end
