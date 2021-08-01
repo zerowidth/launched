@@ -25,6 +25,8 @@ class LaunchdSerializer
       attrs["GroupName"] = plist.group if plist.group.present?
       attrs["RootDirectory"] = plist.root_directory if plist.root_directory.present?
       attrs["WorkingDirectory"] = plist.working_directory if plist.working_directory.present?
+      attrs["StandardOutPath"] = plist.standard_out_path if plist.standard_out_path.present?
+      attrs["StandardErrorPath"] = plist.standard_error_path if plist.standard_error_path.present?
     end
   end
 

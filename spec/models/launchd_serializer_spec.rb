@@ -114,6 +114,15 @@ describe LaunchdSerializer do
         expect(xml["WorkingDirectory"]).to be_nil
       end
     end
+
+    context "with logging paths" do
+      it "includes StandardOutPath and StandardErrorPath" do
+        plist.standard_out_path = "/tmp/stdout.log"
+        plist.standard_error_path = "/tmp/stderr.log"
+        expect(xml["StandardOutPath"]).to eq "/tmp/stdout.log"
+        expect(xml["StandardErrorPath"]).to eq "/tmp/stderr.log"
+      end
+    end
   end
 
 end

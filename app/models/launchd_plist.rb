@@ -22,6 +22,8 @@ class LaunchdPlist
   attribute :group, :string
   attribute :root_directory, :string
   attribute :working_directory, :string
+  attribute :standard_out_path, :string
+  attribute :standard_error_path, :string
 
   # just for tracking
   attribute :created_at, :datetime
@@ -34,6 +36,7 @@ class LaunchdPlist
   validates :minute, :hour, :day_of_month, :month, :weekday,
     length: { maximum: 64 }, format: { with: CRON_EXP }, allow_blank: true
   validates :user, :group, :root_directory, :working_directory,
+    :standard_out_path, :standard_error_path,
     length: { maximum: 256 }, allow_blank: true
 
   def self.count
@@ -105,6 +108,8 @@ class LaunchdPlist
       "group" => group,
       "root_directory" => root_directory,
       "working_directory" => working_directory,
+      "standard_out_path" => standard_out_path,
+      "standard_error_path" => standard_error_path,
       "created_at" => created_at
     }.reject { |_k, v| v.blank? }
   end

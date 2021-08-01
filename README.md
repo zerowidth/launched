@@ -7,6 +7,9 @@ files for it by hand can be difficult. This app makes it easier.
 
 YIBYABS: Yes, I Built Yet Another Bootstrap Site!
 
+This is deployed to heroku using the redis addon with the `allkeys-lru`
+maxmemory setting.
+
 ## Is it any good?
 
 Yes.
