@@ -42,7 +42,7 @@ class PlistsController < ApplicationController
   protected
 
   def plist_params
-    params.require(:plist).permit(:name, :command, :start_interval, :minute, :hour, :day_of_month, :month, :weekday, :user, :group, :working_directory, :root_directory)
+    params.require(:plist).permit!
   end
 
   def find_plist_by_uuid

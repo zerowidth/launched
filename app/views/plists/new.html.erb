@@ -55,6 +55,14 @@
         <%= f.input :root_directory, hint: "Run with chroot in this directory" %>
       </div>
     </div>
+    <div class="row mb-3">
+      <div class="col">
+        <%= f.input :standard_out_path, hint: "Log standard out to this path" %>
+      </div>
+      <div class="col">
+        <%= f.input :standard_error_path, hint: "Log standard error to this path" %>
+      </div>
+    </div>
   </fieldset>
 
   <div class="row border-top pt-3">
