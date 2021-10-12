@@ -92,13 +92,13 @@ GEM
     mini_mime (1.1.0)
     mini_portile2 (2.6.1)
     minitest (5.14.4)
-    nio4r (2.5.7)
+    nio4r (2.5.8)
     nokogiri (1.12.5)
       mini_portile2 (~> 2.6.1)
       racc (~> 1.4)
     plist (3.6.0)
     popper_js (2.9.2)
-    puma (5.4.0)
+    puma (5.5.1)
       nio4r (~> 2.0)
     racc (1.5.2)
     rack (2.2.3)
@@ -194,7 +194,7 @@ DEPENDENCIES
   connection_pool
   listen (~> 3.3)
   plist
-  puma (~> 5.0)
+  puma (~> 5.5)
   rails (~> 6.1.4)
   rails-controller-testing
   redis
