@@ -16,13 +16,13 @@ app = "zerowidth-redis"
 [build]
   image = "flyio/redis:6.2"
 
-[[services]]
-internal_port = 6379
-protocol      = "tcp"
+# [[services]]
+# internal_port = 6379
+# protocol      = "tcp"
 
-  [[services.ports]]
-  port     = "16379"
+#   [[services.ports]]
+#   port     = "16379"
 
-  [[services.tcp_checks]]
-  interval = 10000
-  timeout  = 2000
+#   [[services.tcp_checks]]
+#   interval = 10000
+#   timeout  = 2000
