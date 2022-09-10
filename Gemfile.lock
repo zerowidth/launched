@@ -226,6 +226,7 @@ DEPENDENCIES
   connection_pool
   debug (>= 1.0.0)
   listen (~> 3.3)
+  mini_portile2 (~> 2.8.0)
   plist
   puma (~> 5.6)
   rails (~> 7)

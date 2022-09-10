@@ -17,6 +17,7 @@ gem "connection_pool"
 gem "plist"
 gem "redis"
 gem "simple_form"
+gem "mini_portile2", "~> 2.8.0" # for nokogiri to build
 
 group :development, :test do
   gem "debug", ">= 1.0.0"
