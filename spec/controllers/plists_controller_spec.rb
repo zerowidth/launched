@@ -11,20 +11,19 @@ describe PlistsController do
 
   let :plist do
     p = LaunchdPlist.new(name: "test", command: "ls", start_interval: "300")
-    unless p.save
-      raise p.errors.inspect
-    end
+    raise p.errors.inspect unless p.save
+
     p
   end
 
   describe "POST to create" do
     def create(overrides = {})
       post :create,
-        params: { plist: {
-          name: "test command",
-          command: "echo hello",
-          start_interval: "300",
-        }.merge(overrides) }
+           params: { plist: {
+             name: "test command",
+             command: "echo hello",
+             start_interval: "300"
+           }.merge(overrides) }
     end
 
     it "redirects to the new plist path" do
@@ -34,7 +33,7 @@ describe PlistsController do
     end
 
     it "creates a launchd plist entry" do
-      expect(lambda { create }).to change(LaunchdPlist, :count).by(1)
+      expect { create }.to change(LaunchdPlist, :count).by(1)
     end
   end
 
