@@ -11,10 +11,10 @@ describe LaunchdPlist do
 
   let :plist do
     LaunchdPlist.new(
-      :name => "Hello World",
-      :command => 'growlnotify -m "hello!"',
-      :weekday => "1,2,3,4,5",
-      :month => "1,4,7,10"
+      name: "Hello World",
+      command: 'growlnotify -m "hello!"',
+      weekday: "1,2,3,4,5",
+      month: "1,4,7,10"
     )
   end
 
@@ -55,7 +55,7 @@ describe LaunchdPlist do
         root_directory: "/Users/whoami",
         working_directory: "/tmp",
         standard_out_path: "/var/log/stdout.log",
-        standard_error_path: "/var/log/stderr.log",
+        standard_error_path: "/var/log/stderr.log"
       }.stringify_keys
       plist = LaunchdPlist.new(attributes)
       expect(plist.save).to be true

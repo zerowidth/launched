@@ -34,10 +34,10 @@ class LaunchdPlist
   validates :name, presence: true, length: { maximum: 256 }
   validates :start_interval, numericality: true, allow_blank: true
   validates :minute, :hour, :day_of_month, :month, :weekday,
-    length: { maximum: 64 }, format: { with: CRON_EXP }, allow_blank: true
+            length: { maximum: 64 }, format: { with: CRON_EXP }, allow_blank: true
   validates :user, :group, :root_directory, :working_directory,
-    :standard_out_path, :standard_error_path,
-    length: { maximum: 256 }, allow_blank: true
+            :standard_out_path, :standard_error_path,
+            length: { maximum: 256 }, allow_blank: true
 
   def self.count
     REDIS.with do |redis|
@@ -87,7 +87,7 @@ class LaunchdPlist
     return false unless valid?
 
     REDIS.with do |redis|
-      redis.hset("#{self.class.namespace}:#{uuid}", serializable_hash)
+      redis.hset("#{self.class.namespace}:#{uuid}", as_json)
     end
     self.persisted = true
     true
@@ -116,7 +116,7 @@ class LaunchdPlist
 
   def attributes=(hash)
     hash.each do |key, value|
-      send("#{key}=", value) if respond_to?("#{key}=")
+      send("#{key}=", value)
     end
   end
 
