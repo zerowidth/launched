@@ -14,3 +14,4 @@ config/master.key
 config/credentials/*.key
 
 node_modules
+exported.json
