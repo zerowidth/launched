@@ -1,12 +1,16 @@
 body > header {
   border-bottom: 1px solid var(--muted-border-color);
+  background-color: var(--card-sectionning-background-color);
 }
 body > footer {
   border-top: 1px solid var(--muted-border-color);
+  background-color: var(--card-sectionning-background-color);
 }
 
 @media (min-width: 576px) {
-  body > header,
+  body > header {
+    --block-spacing-vertical: 0;
+  }
   body > main,
   body > footer,
   section {
@@ -14,7 +18,9 @@ body > footer {
   }
 }
 @media (min-width: 768px) {
-  body > header,
+  body > header {
+    --block-spacing-vertical: 0;
+  }
   body > main,
   body > footer,
   section {
@@ -22,7 +28,9 @@ body > footer {
   }
 }
 @media (min-width: 992px) {
-  body > header,
+  body > header {
+    --block-spacing-vertical: 0;
+  }
   body > main,
   body > footer,
   section {
@@ -30,7 +38,9 @@ body > footer {
   }
 }
 @media (min-width: 1200px) {
-  body > header,
+  body > header {
+    --block-spacing-vertical: 0;
+  }
   body > main,
   body > footer,
   section {
