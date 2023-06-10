@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"fmt"
 	"net/http"
 	"os"
@@ -23,6 +24,9 @@ var rootCmd = &cobra.Command{
 var development bool
 var listenAddress string
 
+//go:embed static/* templates/*
+var assets embed.FS
+
 func init() {
 	rootCmd.PersistentFlags().BoolVarP(&development, "development", "d", false, "run development mode to live-reload templates and static files")
 	rootCmd.PersistentFlags().StringVarP(&listenAddress, "listen-address", "l", "localhost:3000", "address to listen on")
@@ -39,12 +43,25 @@ func serve() {
 	logger, _ := zap.NewDevelopment()
 	defer logger.Sync()
 
+	var staticFiles http.FileSystem
+	if development {
+		staticFiles = http.Dir(".")
+	} else {
+		staticFiles = http.FS(assets)
+	}
+
 	r := chi.NewRouter()
 	r.Use(requestLogger(logger))
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		w.Write([]byte("hi"))
+		file, err := assets.ReadFile("templates/layout.html")
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		w.Write(file)
 	})
+	r.Handle("/static/*", http.FileServer(staticFiles))
 
 	logger.Info("starting server", zap.String("listen-address", listenAddress), zap.Bool("development", development))
 	if err := http.ListenAndServe(listenAddress, r); err != nil {
