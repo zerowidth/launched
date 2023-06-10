@@ -17,7 +17,9 @@
     <header>Schedule</header>
 
     <div class="grid">
-      <p>You can run your command at an interval and/or a scheduled defined with cron-style expressions:</p>
+      <p>You can run your command at a regular interval and/or a schedule defined with cron-style expressions like
+         <small><code>&lt;value&gt;,&lt;value&gt;,...</code></small>, <small><code>&lt;start&gt;-&lt;end&gt;</code></small>, and <small><code>*/&lt;interval&gt;</code></small>
+      </p>
 
       <label for="start_interval">Start interval
         <input type="text" name="start_interval" id="start_interval">
@@ -27,29 +29,24 @@
     </div>
 
     <div class="grid">
-      <label for="minute">Minute
+      <label for="minute">Minute <small><code>0-59</code></small>
         <input type="text" name="minute" id="minute">
-        <small><code>0-59</code>, <code>0,30</code>, <code>*/5</code></small>
       </label>
 
-      <label for="hour">Hour
+      <label for="hour">Hour <small><code>0-23</code></small>
         <input type="text" name="hour" id="hour">
-        <small><code>0-23</code>, <code>0,12</code>, <code>*/3</code></small>
       </label>
 
-      <label for="day_of_month">Day of month
+      <label for="day_of_month">Day of month <small><code>1-31</code></small>
         <input type="text" name="day_of_month" id="day_of_month">
-        <small><code>1-31</code>, <code>1,15</code>, <code>*/3</code></small>
       </label>
 
-      <label for="month">Month
+      <label for="month">Month <small><code>1-12</code></small>
         <input type="text" name="month" id="month">
-        <small><code>1-12</code>, <code>1,7</code>, <code>*/3</code></small>
       </label>
 
-      <label for="weekday">Weekday
+      <label for="weekday">Weekday <small><code>0-6</code></small>
         <input type="text" name="weekday" id="weekday">
-        <small><code>0-6</code>, <code>0,3</code>, <code>*/3</code></small>
       </label>
     </div>
   </article>
