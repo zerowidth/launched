@@ -3,6 +3,8 @@ package main
 import (
 	"embed"
 	"fmt"
+	"io"
+	"io/fs"
 	"net/http"
 	"os"
 	"time"
@@ -24,7 +26,7 @@ var rootCmd = &cobra.Command{
 var development bool
 var listenAddress string
 
-//go:embed static/* templates/*
+//go:embed static templates
 var assets embed.FS
 
 func init() {
@@ -43,25 +45,31 @@ func serve() {
 	logger, _ := zap.NewDevelopment()
 	defer logger.Sync()
 
-	var staticFiles http.FileSystem
+	var fs fs.FS
 	if development {
-		staticFiles = http.Dir(".")
+		fs = os.DirFS(".")
 	} else {
-		staticFiles = http.FS(assets)
+		fs = assets
 	}
 
 	r := chi.NewRouter()
 	r.Use(requestLogger(logger))
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		file, err := assets.ReadFile("templates/layout.html")
+		file, err := fs.Open("templates/layout.html")
 		if err != nil {
 			w.WriteHeader(http.StatusInternalServerError)
 			return
 		}
-		w.Write(file)
+		content, err := io.ReadAll(file)
+
+		if err != nil {
+			w.WriteHeader(http.StatusInternalServerError)
+			return
+		}
+		w.Write(content)
 	})
-	r.Handle("/static/*", http.FileServer(staticFiles))
+	r.Handle("/static/*", http.FileServer(http.FS(fs)))
 
 	logger.Info("starting server", zap.String("listen-address", listenAddress), zap.Bool("development", development))
 	if err := http.ListenAndServe(listenAddress, r); err != nil {

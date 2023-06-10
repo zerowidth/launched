@@ -1,0 +1,39 @@
+body > header {
+  border-bottom: 1px solid var(--muted-border-color);
+}
+body > footer {
+  border-top: 1px solid var(--muted-border-color);
+}
+
+@media (min-width: 576px) {
+  body > header,
+  body > main,
+  body > footer,
+  section {
+    --block-spacing-vertical: var(--spacing);
+  }
+}
+@media (min-width: 768px) {
+  body > header,
+  body > main,
+  body > footer,
+  section {
+    --block-spacing-vertical: var(--spacing);
+  }
+}
+@media (min-width: 992px) {
+  body > header,
+  body > main,
+  body > footer,
+  section {
+    --block-spacing-vertical: var(--spacing);
+  }
+}
+@media (min-width: 1200px) {
+  body > header,
+  body > main,
+  body > footer,
+  section {
+    --block-spacing-vertical: var(--spacing);
+  }
+}
