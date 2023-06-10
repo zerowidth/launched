@@ -1,0 +1,129 @@
+{{define "content"}}
+<form action="/plist" method="post">
+
+  <article>
+    <header>Basics</header>
+    <label for="name">Name
+      <input type="text" name="name" id="name" />
+      <small>Prefixed with <code>launched.</code></small>
+    </label>
+    <label for="command">Command
+      <input type="text" name="command" id="command" />
+      <small>Runs with <code>sh -c</code></small>
+    </label>
+  </article>
+
+  <article>
+    <header>Schedule</header>
+
+    <div class="grid">
+      <p>You can run your command at an interval and/or a scheduled defined with cron-style expressions:</p>
+
+      <label for="start_interval">Start interval
+        <input type="text" name="start_interval" id="start_interval">
+        <small>Run at this interval (seconds)</small>
+      </label>
+
+    </div>
+
+    <div class="grid">
+      <label for="minute">Minute
+        <input type="text" name="minute" id="minute">
+        <small><code>0-59</code>, <code>0,30</code>, <code>*/5</code></small>
+      </label>
+
+      <label for="hour">Hour
+        <input type="text" name="hour" id="hour">
+        <small><code>0-23</code>, <code>0,12</code>, <code>*/3</code></small>
+      </label>
+
+      <label for="day_of_month">Day of month
+        <input type="text" name="day_of_month" id="day_of_month">
+        <small><code>1-31</code>, <code>1,15</code>, <code>*/3</code></small>
+      </label>
+
+      <label for="month">Month
+        <input type="text" name="month" id="month">
+        <small><code>1-12</code>, <code>1,7</code>, <code>*/3</code></small>
+      </label>
+
+      <label for="weekday">Weekday
+        <input type="text" name="weekday" id="weekday">
+        <small><code>0-6</code>, <code>0,3</code>, <code>*/3</code></small>
+      </label>
+    </div>
+  </article>
+  <article>
+    <header>Daemon</header>
+    <div class="grid">
+      <p>If not scheduled, you can choose to run this other ways:</p>
+      <fieldset>
+        <label for="run_at_load">
+          <input type="checkbox" id="run_at_load" name="run_at_load" role="switch">
+          Run at load
+        </label>
+        <label for="restart_on_crash">
+          <input type="checkbox" id="restart_on_crash" name="restart_on_crash" role="switch">
+          Restart after crashes (implies run at load)
+        </label>
+        <label for="start_on_mount">
+          <input type="checkbox" id="start_on_mount" name="start_on_mount" role="switch">
+          Start when any filesystem is mounted
+        </label>
+      </fieldset>
+    </div>
+      <label for="queue_directories">
+        Queue directories
+        <input type="text" name="queue_directories" id="queue_directories">
+        <small>Comma-separated list of directories. Job will run as long as these directories are not empty.</small>
+      </label>
+  </article>
+
+
+  </article>
+
+  <article>
+    <label for="environment">
+      Environment
+      <textarea name="environment" id="environment" rows="5"></textarea>
+      <small>Environment variables, one per line, in <code>NAME=value</code> format</small>
+    </label>
+
+    <div class="grid">
+
+      <label for="user">User
+        <input type="text" name="user" id="user">
+        <small>Run as this user</small>
+      </label>
+
+      <label for="group">Group
+        <input type="text" name="group" id="group">
+        <small>and/or this group</small>
+      </label>
+    </div>
+    <div class="grid">
+      <label for="working_directory">Working directory
+        <input type="text" name="working_directory" id="working_directory">
+        <small>Run in this working directory</small>
+      </label>
+      <label for="root_directory">Root directory
+        <input type="text" name="root_directory" id="root_directory">
+        <small>Run with chroot in this directory</small>
+      </label>
+    </div>
+    <div class="grid">
+      <label for="standard_out_path">Standard out path
+        <input type="text" name="standard_out_path" id="standard_out_path">
+        <small>Log standard out to this path</small>
+      </label>
+
+      <label for="standard_error_path">Standard error path
+        <input type="text" name="standard_error_path" id="standard_error_path">
+        <small>Log standard error to this path</small>
+      </label>
+    </div>
+  </article>
+
+  <input type="submit" value="Create Plist">
+</form>
+{{end}}

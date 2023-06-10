@@ -3,10 +3,10 @@ package main
 import (
 	"embed"
 	"fmt"
-	"io"
 	"io/fs"
 	"net/http"
 	"os"
+	"text/template"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -56,18 +56,8 @@ func serve() {
 	r.Use(requestLogger(logger))
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
-		file, err := fs.Open("templates/layout.html")
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		content, err := io.ReadAll(file)
-
-		if err != nil {
-			w.WriteHeader(http.StatusInternalServerError)
-			return
-		}
-		w.Write(content)
+		layout := template.Must(template.ParseFS(fs, "templates/layout.html", "templates/form.html"))
+		layout.Execute(w, nil)
 	})
 	r.Handle("/static/*", http.FileServer(http.FS(fs)))
 
