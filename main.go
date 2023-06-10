@@ -4,7 +4,10 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"time"
 
+	"github.com/go-chi/chi/v5"
+	"github.com/go-chi/chi/v5/middleware"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )
@@ -34,10 +37,38 @@ func main() {
 
 func serve() {
 	logger, _ := zap.NewDevelopment()
-	mux := http.NewServeMux()
+	defer logger.Sync()
+
+	r := chi.NewRouter()
+	r.Use(requestLogger(logger))
+
+	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("hi"))
+	})
 
 	logger.Info("starting server", zap.String("listen-address", listenAddress), zap.Bool("development", development))
-	if err := http.ListenAndServe(listenAddress, mux); err != nil {
-		logger.Error("failed to start server", zap.Error(err))
+	if err := http.ListenAndServe(listenAddress, r); err != nil {
+		logger.Error("server error", zap.Error(err))
+	}
+}
+
+func requestLogger(logger *zap.Logger) func(next http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			wrapper := middleware.NewWrapResponseWriter(w, r.ProtoMajor)
+			start := time.Now()
+			next.ServeHTTP(wrapper, r)
+
+			logger.Info("request completed",
+				zap.String("method", r.Method),
+				zap.Int("status", wrapper.Status()),
+				zap.Int("bytes", wrapper.BytesWritten()),
+				zap.String("remote", r.RemoteAddr),
+				zap.String("host", r.Host),
+				zap.String("path", r.URL.Path),
+				zap.String("user-agent", r.UserAgent()),
+				zap.Duration("duration", time.Since(start)),
+			)
+		})
 	}
 }
