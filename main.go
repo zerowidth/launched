@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
+	"net/http"
 	"os"
 
 	"github.com/spf13/cobra"
+	"go.uber.org/zap"
 )
 
 var rootCmd = &cobra.Command{
@@ -15,10 +17,12 @@ var rootCmd = &cobra.Command{
 	},
 }
 
-var development = false
+var development bool
+var listenAddress string
 
 func init() {
-	rootCmd.PersistentFlags().BoolVarP(&development, "development", "d", false, "run development mode to live-reload templates/static files")
+	rootCmd.PersistentFlags().BoolVarP(&development, "development", "d", false, "run development mode to live-reload templates and static files")
+	rootCmd.PersistentFlags().StringVarP(&listenAddress, "listen-address", "l", "localhost:3000", "address to listen on")
 }
 
 func main() {
@@ -29,5 +33,11 @@ func main() {
 }
 
 func serve() {
-	fmt.Println("Hello, world!")
+	logger, _ := zap.NewDevelopment()
+	mux := http.NewServeMux()
+
+	logger.Info("starting server", zap.String("listen-address", listenAddress), zap.Bool("development", development))
+	if err := http.ListenAndServe(listenAddress, mux); err != nil {
+		logger.Error("failed to start server", zap.Error(err))
+	}
 }
