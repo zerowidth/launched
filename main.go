@@ -14,6 +14,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-playground/form"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )
@@ -32,9 +33,14 @@ var listenAddress string
 //go:embed static templates
 var assets embed.FS
 
+// single instance caches structs
+var decoder *form.Decoder
+
 func init() {
 	rootCmd.PersistentFlags().BoolVarP(&development, "development", "d", false, "run development mode to live-reload templates and static files")
 	rootCmd.PersistentFlags().StringVarP(&listenAddress, "listen-address", "l", "localhost:3000", "address to listen on")
+
+	decoder = form.NewDecoder()
 }
 
 func main() {
@@ -84,49 +90,29 @@ func serve() {
 // JSON encoded launchd plist, for encoded use in URL path.
 // Uses string types to easily allow for empty values.
 type LaunchdPlist struct {
-	Name              string `json:"name,omitempty"`
-	Command           string `json:"command,omitempty"`
-	StartInterval     string `json:"start_interval,omitempty"`
-	Minute            string `json:"minute,omitempty"`
-	Hour              string `json:"hour,omitempty"`
-	DayOfMonth        string `json:"day_of_month,omitempty"`
-	Month             string `json:"month,omitempty"`
-	Weekday           string `json:"weekday,omitempty"`
-	RunAtLoad         string `json:"run_at_load,omitempty"`
-	RestartOnCrash    string `json:"restart_on_crash,omitempty"`
-	StartOnMount      string `json:"start_on_mount,omitempty"`
-	QueueDirectories  string `json:"queue_directories,omitempty"`
-	Environment       string `json:"environment,omitempty"`
-	User              string `json:"user,omitempty"`
-	Group             string `json:"group,omitempty"`
-	WorkingDirectory  string `json:"working_directory,omitempty"`
-	StandardOutPath   string `json:"standard_out_path,omitempty"`
-	StandardErrorPath string `json:"standard_error_path,omitempty"`
+	Name              string `json:"name,omitempty" form:"name"`
+	Command           string `json:"command,omitempty" form:"command"`
+	StartInterval     string `json:"start_interval,omitempty" form:"start_interval"`
+	Minute            string `json:"minute,omitempty" form:"minute"`
+	Hour              string `json:"hour,omitempty" form:"hour"`
+	DayOfMonth        string `json:"day_of_month,omitempty" form:"day_of_month"`
+	Month             string `json:"month,omitempty" form:"month"`
+	Weekday           string `json:"weekday,omitempty" form:"weekday"`
+	RunAtLoad         string `json:"run_at_load,omitempty" form:"run_at_load"`
+	RestartOnCrash    string `json:"restart_on_crash,omitempty" form:"restart_on_crash"`
+	StartOnMount      string `json:"start_on_mount,omitempty" form:"start_on_mount"`
+	QueueDirectories  string `json:"queue_directories,omitempty" form:"queue_directories"`
+	Environment       string `json:"environment,omitempty" form:"environment"`
+	User              string `json:"user,omitempty" form:"user"`
+	Group             string `json:"group,omitempty" form:"group"`
+	WorkingDirectory  string `json:"working_directory,omitempty" form:"working_directory"`
+	StandardOutPath   string `json:"standard_out_path,omitempty" form:"standard_out_path"`
+	StandardErrorPath string `json:"standard_error_path,omitempty" form:"standard_error_path"`
 }
 
 func createPlistFromForm(values url.Values) string {
-	// parse the values into a LaunchdPlist
-	plist := LaunchdPlist{
-		Name:              values.Get("name"),
-		Command:           values.Get("command"),
-		StartInterval:     values.Get("start_interval"),
-		Minute:            values.Get("minute"),
-		Hour:              values.Get("hour"),
-		DayOfMonth:        values.Get("day_of_month"),
-		Month:             values.Get("month"),
-		Weekday:           values.Get("weekday"),
-		RunAtLoad:         values.Get("run_at_load"),
-		RestartOnCrash:    values.Get("restart_on_crash"),
-		StartOnMount:      values.Get("start_on_mount"),
-		QueueDirectories:  values.Get("queue_directories"),
-		Environment:       values.Get("environment"),
-		User:              values.Get("user"),
-		Group:             values.Get("group"),
-		WorkingDirectory:  values.Get("working_directory"),
-		StandardOutPath:   values.Get("standard_out_path"),
-		StandardErrorPath: values.Get("standard_error_path"),
-	}
-
+	plist := LaunchdPlist{}
+	_ = decoder.Decode(&plist, values)
 	encoded, _ := json.Marshal(plist)
 	return base64.RawURLEncoding.EncodeToString(encoded)
 }
