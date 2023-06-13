@@ -3,20 +3,22 @@
   <article>
     <header>Basics</header>
     <label for="name">Name
-      {{if index .Errors "LaunchdPlist.Name"}}
-      <small class="form-error" id="name-error">{{ index .Errors "LaunchdPlist.Name" }}</small>
-      <input type="text" name="name" id="name" value="{{ .Plist.Name }}" aria-invalid="true" aria-describedby="name-error">
+      {{if .Name.Error}}
+      <small class="form-error" id="name-error">{{ .Name.Error }}</small>
+      <input type="text" name="name" id="name" value="{{ .Name.Value }}" aria-invalid="true"
+        aria-describedby="name-error">
       {{else}}
-      <input type="text" name="name" id="name" value="{{ .Plist.Name }}">
+      <input type="text" name="name" id="name" value="{{ .Name.Value }}">
       {{end}}
       <small>Prefixed with <code>launched.</code></small>
     </label>
     <label for="command">Command
-      {{ if index .Errors "LaunchdPlist.Command" }}
-      <small class="form-error" id="command-error">{{ index .Errors "LaunchdPlist.Command" }}</small>
-      <input type="text" name="command" id="command" value="{{ .Plist.Command }}" aria-invalid="true" aria-describedby="command-error">
+      {{ if .Command.Error }}
+      <small class="form-error" id="command-error">{{ .Command.Error }}</small>
+      <input type="text" name="command" id="command" value="{{ .Command.Value }}" aria-invalid="true"
+        aria-describedby="command-error">
       {{ else }}
-      <input type="text" name="command" id="command" value="{{ .Plist.Command }}">
+      <input type="text" name="command" id="command" value="{{ .Command.Value }}">
       {{ end }}
       <small>Runs with <code>sh -c</code></small>
     </label>
@@ -32,7 +34,13 @@
       </p>
 
       <label for="start_interval">Start interval
-        <input type="text" name="start_interval" id="start_interval">
+        {{ if .StartInterval.Error }}
+        <small class="form-error" id="start-interval-error">{{ .StartInterval.Error }}</small>
+        <input type="text" name="start_interval" id="start_interval" value="{{.StartInterval.Value}}"
+          aria-invalid="true" aria-describedby="start-interval-error">
+        {{ else }}
+        <input type="text" name="start_interval" id="start_interval" value="{{.StartInterval.Value}}">
+        {{ end }}
         <small>Run at this interval (seconds)</small>
       </label>
 
@@ -40,26 +48,53 @@
 
     <div class="grid">
       <label for="minute">Minute <small><code>0-59</code></small>
-        <input type="text" name="minute" id="minute">
+        {{ if .Minute.Error }}
+        <small class="form-error" id="minute-error">{{ .Minute.Error }}</small>
+        <input type="text" name="minute" id="minute" value="{{ .Minute.Value }}" aria-invalid="true" aria-describedby="minute-error">
+        {{ else }}
+        <input type="text" name="minute" id="minute" value="{{ .Minute.Value }}">
+        {{ end }}
       </label>
 
       <label for="hour">Hour <small><code>0-23</code></small>
-        <input type="text" name="hour" id="hour">
+        {{ if .Hour.Error }}
+        <input type="text" name="hour" id="hour" >
+        <small class="form-error" id="hour-error">{{ .Hour.Error }}</small>
+        <input type="text" name="hour" id="hour" value="{{ .Hour.Value }}" aria-invalid="true" aria-describedby="hour-error">
+        {{ else }}
+        <input type="text" name="hour" id="hour" value="{{ .Hour.Value }}">
+        {{ end }}
       </label>
 
       <label for="day_of_month">Day of month <small><code>1-31</code></small>
-        <input type="text" name="day_of_month" id="day_of_month">
+        {{ if .DayOfMonth.Error }}
+        <small class="form-error" id="day-of-month-error">{{ .DayOfMonth.Error }}</small>
+        <input type="text" name="day_of_month" id="day_of_month" value="{{ .DayOfMonth.Value }}" aria-invalid="true" aria-describedby="day-of-month-error">
+        {{ else }}
+        <input type="text" name="day_of_month" id="day_of_month" value="{{ .DayOfMonth.Value }}">
+        {{ end }}
       </label>
 
       <label for="month">Month <small><code>1-12</code></small>
-        <input type="text" name="month" id="month">
+        {{ if .Month.Error }}
+        <small class="form-error" id="month-error">{{ .Month.Error }}</small>
+        <input type="text" name="month" id="month" value="{{ .Month.Value }}" aria-invalid="true" aria-describedby="month-error">
+        {{ else }}
+        <input type="text" name="month" id="month" value="{{ .Month.Value }}">
+        {{ end }}
       </label>
 
       <label for="weekday">Weekday <small><code>0-6</code></small>
-        <input type="text" name="weekday" id="weekday">
+        {{ if .Weekday.Error }}
+        <small class="form-error" id="weekday-error">{{ .Weekday.Error }}</small>
+        <input type="text" name="weekday" id="weekday" value="{{ .Weekday.Value }}" aria-invalid="true" aria-describedby="weekday-error">
+        {{ else }}
+        <input type="text" name="weekday" id="weekday" value="{{ .Weekday.Value }}">
+        {{ end }}
       </label>
     </div>
   </article>
+
   <article>
     <header>Daemon</header>
     <div class="grid">
@@ -86,9 +121,6 @@
     </label>
   </article>
 
-
-  </article>
-
   <article>
     <label for="environment">
       Environment
@@ -97,7 +129,6 @@
     </label>
 
     <div class="grid">
-
       <label for="user">User
         <input type="text" name="user" id="user">
         <small>Run as this user</small>

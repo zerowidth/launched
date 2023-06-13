@@ -8,11 +8,13 @@ import (
 	"io/fs"
 	"net/http"
 	"os"
+	"reflect"
 	"time"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/go-playground/form"
+	"github.com/go-playground/validator/v10"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 )
@@ -48,9 +50,25 @@ func main() {
 	}
 }
 
-type PlistForm struct {
-	Plist  LaunchdPlist
-	Errors map[string]string
+type PlistField struct {
+	Value string
+	Error string
+}
+
+type PlistForm map[string]PlistField
+
+func NewPlistForm(plist LaunchdPlist, errors validator.ValidationErrorsTranslations) PlistForm {
+	form := PlistForm{}
+	v := reflect.ValueOf(plist)
+	for i := 0; i < v.NumField(); i++ {
+		field := v.Type().Field(i)
+		value := v.Field(i).Interface().(string)
+		form[field.Name] = PlistField{
+			Value: fmt.Sprintf("%v", value),
+			Error: errors[v.Type().Name()+"."+field.Name],
+		}
+	}
+	return form
 }
 
 func serve() {
@@ -78,7 +96,7 @@ func serve() {
 		plist := NewPlistFromForm(r.PostForm)
 		errors := plist.Validate()
 		if errors != nil {
-			form := PlistForm{Plist: plist, Errors: errors}
+			form := NewPlistForm(plist, errors)
 			layout := template.Must(template.ParseFS(fs, "templates/layout.html", "templates/form.html"))
 			layout.Execute(w, form)
 			// w.Write([]byte(fmt.Sprintf("errors: %+v", errors)))
