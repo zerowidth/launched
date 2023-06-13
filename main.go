@@ -120,6 +120,14 @@ func serve() {
 		w.Write([]byte(plist.PlistXML()))
 	})
 
+	r.Get("/plist/{encoded}/edit", func(w http.ResponseWriter, r *http.Request) {
+		decoded, _ := base64.RawURLEncoding.DecodeString(chi.URLParam(r, "encoded"))
+		plist := NewPlistFromJSON(string(decoded))
+		form := NewPlistForm(plist, nil)
+		layout := template.Must(template.ParseFS(fs, "templates/layout.html", "templates/form.html"))
+		layout.Execute(w, form)
+	})
+
 	r.Handle("/static/*", http.FileServer(http.FS(fs)))
 
 	logger.Info("starting server", zap.String("listen-address", listenAddress), zap.Bool("development", development))

@@ -101,22 +101,22 @@
       <p>If not scheduled, you can choose to run this other ways:</p>
       <fieldset>
         <label for="run_at_load">
-          <input type="checkbox" id="run_at_load" name="run_at_load" role="switch">
+          <input type="checkbox" id="run_at_load" name="run_at_load" role="switch" {{ if .RunAtLoad.Value }}checked{{ end }}>
           Run at load
         </label>
         <label for="restart_on_crash">
-          <input type="checkbox" id="restart_on_crash" name="restart_on_crash" role="switch">
+          <input type="checkbox" id="restart_on_crash" name="restart_on_crash" role="switch" {{ if .RestartOnCrash.Value }}checked{{ end }}>
           Restart after crashes (implies run at load)
         </label>
         <label for="start_on_mount">
-          <input type="checkbox" id="start_on_mount" name="start_on_mount" role="switch">
+          <input type="checkbox" id="start_on_mount" name="start_on_mount" role="switch" {{ if .StartOnMount.Value }}checked{{ end }}>
           Start when any filesystem is mounted
         </label>
       </fieldset>
     </div>
     <label for="queue_directories">
       Queue directories
-      <input type="text" name="queue_directories" id="queue_directories">
+      <input type="text" name="queue_directories" id="queue_directories" value="{{ .QueueDirectories.Value }}">
       <small>Comma-separated list of directories. Job will run as long as these directories are not empty.</small>
     </label>
   </article>
@@ -124,39 +124,39 @@
   <article>
     <label for="environment">
       Environment
-      <textarea name="environment" id="environment" rows="5"></textarea>
+      <textarea name="environment" id="environment" rows="5">{{ .Environment.Value }}</textarea>
       <small>Environment variables, one per line, in <code>NAME=value</code> format</small>
     </label>
 
     <div class="grid">
       <label for="user">User
-        <input type="text" name="user" id="user">
+        <input type="text" name="user" id="user" value="{{ .User.Value }}">
         <small>Run as this user</small>
       </label>
 
       <label for="group">Group
-        <input type="text" name="group" id="group">
+        <input type="text" name="group" id="group" value="{{ .Group.Value }}">
         <small>and/or this group</small>
       </label>
     </div>
     <div class="grid">
       <label for="working_directory">Working directory
-        <input type="text" name="working_directory" id="working_directory">
+        <input type="text" name="working_directory" id="working_directory" value="{{ .WorkingDirectory.Value }}">
         <small>Run in this working directory</small>
       </label>
       <label for="root_directory">Root directory
-        <input type="text" name="root_directory" id="root_directory">
+        <input type="text" name="root_directory" id="root_directory" value="{{ .RootDirectory.Value }}">
         <small>Run with chroot in this directory</small>
       </label>
     </div>
     <div class="grid">
       <label for="standard_out_path">Standard out path
-        <input type="text" name="standard_out_path" id="standard_out_path">
+        <input type="text" name="standard_out_path" id="standard_out_path" value="{{.StandardOutPath.Value}}">
         <small>Log standard out to this path</small>
       </label>
 
       <label for="standard_error_path">Standard error path
-        <input type="text" name="standard_error_path" id="standard_error_path">
+        <input type="text" name="standard_error_path" id="standard_error_path" value="{{.StandardErrorPath.Value}}">
         <small>Log standard error to this path</small>
       </label>
     </div>
