@@ -1,14 +1,23 @@
 {{define "content"}}
 <form action="/plist" method="post">
-
   <article>
     <header>Basics</header>
     <label for="name">Name
-      <input type="text" name="name" id="name" />
+      {{if index .Errors "LaunchdPlist.Name"}}
+      <small class="form-error" id="name-error">{{ index .Errors "LaunchdPlist.Name" }}</small>
+      <input type="text" name="name" id="name" value="{{ .Plist.Name }}" aria-invalid="true" aria-describedby="name-error">
+      {{else}}
+      <input type="text" name="name" id="name" value="{{ .Plist.Name }}">
+      {{end}}
       <small>Prefixed with <code>launched.</code></small>
     </label>
     <label for="command">Command
-      <input type="text" name="command" id="command" />
+      {{ if index .Errors "LaunchdPlist.Command" }}
+      <small class="form-error" id="command-error">{{ index .Errors "LaunchdPlist.Command" }}</small>
+      <input type="text" name="command" id="command" value="{{ .Plist.Command }}" aria-invalid="true" aria-describedby="command-error">
+      {{ else }}
+      <input type="text" name="command" id="command" value="{{ .Plist.Command }}">
+      {{ end }}
       <small>Runs with <code>sh -c</code></small>
     </label>
   </article>
@@ -18,7 +27,8 @@
 
     <div class="grid">
       <p>You can run your command at a regular interval and/or a schedule defined with cron-style expressions like
-         <small><code>&lt;value&gt;,&lt;value&gt;,...</code></small>, <small><code>&lt;start&gt;-&lt;end&gt;</code></small>, and <small><code>*/&lt;interval&gt;</code></small>
+        <small><code>&lt;value&gt;,&lt;value&gt;,...</code></small>,
+        <small><code>&lt;start&gt;-&lt;end&gt;</code></small>, and <small><code>*/&lt;interval&gt;</code></small>
       </p>
 
       <label for="start_interval">Start interval
@@ -69,11 +79,11 @@
         </label>
       </fieldset>
     </div>
-      <label for="queue_directories">
-        Queue directories
-        <input type="text" name="queue_directories" id="queue_directories">
-        <small>Comma-separated list of directories. Job will run as long as these directories are not empty.</small>
-      </label>
+    <label for="queue_directories">
+      Queue directories
+      <input type="text" name="queue_directories" id="queue_directories">
+      <small>Comma-separated list of directories. Job will run as long as these directories are not empty.</small>
+    </label>
   </article>
 
 

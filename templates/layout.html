@@ -22,7 +22,15 @@
     </nav>
   </header>
   <main class="container">
-    {{ template "content" }}
+
+  <code>
+    <pre>
+      {{ .Plist.JSONIndent }}
+      {{ .Errors }}
+    </pre>
+  </code>
+
+    {{ template "content" . }}
   </main>
   <footer class="container-fluid">
     <p>

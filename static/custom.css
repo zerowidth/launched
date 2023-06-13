@@ -6,6 +6,10 @@ body > footer {
   border-top: 1px solid var(--muted-border-color);
   background-color: var(--card-sectionning-background-color);
 }
+.form-error {
+  color: var(--form-element-invalid-border-color);
+  float: right;
+}
 
 @media (min-width: 576px) {
   body > header {
