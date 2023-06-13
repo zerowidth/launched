@@ -59,7 +59,7 @@ func GenerateCronIntervals(minute, hour, day_of_month, month, weekday string) []
 	intervals := combineIntervals([]intervalChoices{
 		{"Minute", cronIntervals(minute, 0, 59)},
 		{"Hour", cronIntervals(hour, 0, 23)},
-		{"DayOfMonth", cronIntervals(day_of_month, 1, 31)},
+		{"Day", cronIntervals(day_of_month, 1, 31)},
 		{"Month", cronIntervals(month, 1, 12)},
 		{"Weekday", cronIntervals(weekday, 0, 6)},
 	})

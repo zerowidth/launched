@@ -1,14 +1,19 @@
 package main
 
 import (
+	"bytes"
 	"encoding/base64"
 	"encoding/json"
 	"net/url"
+	"regexp"
+	"strconv"
+	"strings"
 
 	"github.com/go-playground/locales/en"
 	ut "github.com/go-playground/universal-translator"
 	"github.com/go-playground/validator/v10"
 	en_translations "github.com/go-playground/validator/v10/translations/en"
+	"howett.net/plist"
 )
 
 var validate = validator.New()
@@ -73,6 +78,7 @@ type LaunchdPlist struct {
 	User              string `json:"user,omitempty" form:"user"`
 	Group             string `json:"group,omitempty" form:"group"`
 	WorkingDirectory  string `json:"working_directory,omitempty" form:"working_directory"`
+	RootDirectory     string `json:"root_directory,omitempty" form:"root_directory"`
 	StandardOutPath   string `json:"standard_out_path,omitempty" form:"standard_out_path"`
 	StandardErrorPath string `json:"standard_error_path,omitempty" form:"standard_error_path"`
 }
@@ -83,9 +89,91 @@ func NewPlistFromForm(values url.Values) LaunchdPlist {
 	return plist
 }
 
+func NewPlistFromJSON(encoded string) LaunchdPlist {
+	plist := LaunchdPlist{}
+	_ = json.Unmarshal([]byte(encoded), &plist)
+	return plist
+}
+
 func (p LaunchdPlist) JSONIndent() string {
 	encoded, _ := json.MarshalIndent(p, "", "  ")
 	return string(encoded)
+}
+
+func (p LaunchdPlist) PlistXML() string {
+
+	buf := new(bytes.Buffer)
+	xml := map[string]interface{}{
+		"Label":            p.Label(),
+		"ProgramArguments": []string{"sh", "-c", p.Command},
+	}
+	if p.StartInterval != "" {
+		start, _ := strconv.Atoi(p.StartInterval)
+		xml["StartInterval"] = start
+	}
+	crons := p.CronIntervals()
+	if len(crons) > 0 {
+		xml["StartCalendarInterval"] = crons
+	}
+	if p.RunAtLoad != "" {
+		xml["RunAtLoad"] = true
+	}
+	if p.RestartOnCrash != "" {
+		xml["KeepAlive"] = map[string]interface{}{
+			"Crashed": true,
+		}
+	}
+	if p.StartOnMount != "" {
+		xml["StartOnMount"] = true
+	}
+	if p.QueueDirectories != "" {
+		xml["QueueDirectories"] = strings.Split(p.QueueDirectories, ",")
+	}
+	if p.Environment != "" {
+		xml["EnvironmentVariables"] = p.EnvironmentMap()
+	}
+	if p.User != "" {
+		xml["UserName"] = p.User
+	}
+	if p.Group != "" {
+		xml["GroupName"] = p.Group
+	}
+	if p.WorkingDirectory != "" {
+		xml["WorkingDirectory"] = p.WorkingDirectory
+	}
+	if p.RootDirectory != "" {
+		xml["RootDirectory"] = p.RootDirectory
+	}
+	if p.StandardOutPath != "" {
+		xml["StandardOutPath"] = p.StandardOutPath
+	}
+	if p.StandardErrorPath != "" {
+		xml["StandardErrorPath"] = p.StandardErrorPath
+	}
+
+	encoder := plist.NewEncoder(buf)
+	encoder.Indent("  ")
+	encoder.Encode(xml)
+	return buf.String()
+}
+
+func (p LaunchdPlist) Label() string {
+	whitespace := regexp.MustCompile(`\s+`)
+	return "launched." + whitespace.ReplaceAllString(strings.ToLower(p.Name), "_")
+}
+
+func (p LaunchdPlist) CronIntervals() []map[string]int {
+	return GenerateCronIntervals(p.Minute, p.Hour, p.DayOfMonth, p.Month, p.Weekday)
+}
+
+func (p LaunchdPlist) EnvironmentMap() map[string]string {
+	env := map[string]string{}
+	for _, line := range strings.Split(p.Environment, "\n") {
+		if left, right, found := strings.Cut(line, "="); found {
+			env[left] = right
+		}
+	}
+	return env
 }
 
 func (p LaunchdPlist) Encode() string {

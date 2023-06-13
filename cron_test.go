@@ -49,7 +49,7 @@ func TestGenerateCronIntervals_SingleCombo(t *testing.T) {
 	assert.Equal(
 		t,
 		[]map[string]int{
-			{"Minute": 0, "Hour": 1, "DayOfMonth": 2, "Month": 3, "Weekday": 4},
+			{"Minute": 0, "Hour": 1, "Day": 2, "Month": 3, "Weekday": 4},
 		},
 		GenerateCronIntervals("0", "1", "2", "3", "4"),
 	)
@@ -59,10 +59,10 @@ func TestGenerateCronIntervals_SparseCombo(t *testing.T) {
 	assert.Equal(
 		t,
 		[]map[string]int{
-			{"Hour": 1, "DayOfMonth": 2, "Month": 5},
-			{"Hour": 1, "DayOfMonth": 2, "Month": 9},
-			{"Hour": 3, "DayOfMonth": 2, "Month": 5},
-			{"Hour": 3, "DayOfMonth": 2, "Month": 9},
+			{"Hour": 1, "Day": 2, "Month": 5},
+			{"Hour": 1, "Day": 2, "Month": 9},
+			{"Hour": 3, "Day": 2, "Month": 5},
+			{"Hour": 3, "Day": 2, "Month": 9},
 		},
 		GenerateCronIntervals("", "1,3", "2", "5,9", ""),
 	)

@@ -99,17 +99,25 @@ func serve() {
 			form := NewPlistForm(plist, errors)
 			layout := template.Must(template.ParseFS(fs, "templates/layout.html", "templates/form.html"))
 			layout.Execute(w, form)
-			// w.Write([]byte(fmt.Sprintf("errors: %+v", errors)))
 			return
 		}
-		w.Write([]byte(plist.JSONIndent()))
-		// http.Redirect(w, r, "/plist/"+plist.Encode(), http.StatusSeeOther)
+		http.Redirect(w, r, "/plist/"+plist.Encode(), http.StatusSeeOther)
 	})
 
 	r.Get("/plist/{encoded}", func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Content-Type", "text/plain")
 		decoded, _ := base64.RawURLEncoding.DecodeString(chi.URLParam(r, "encoded"))
-		w.Write(decoded)
+		plist := NewPlistFromJSON(string(decoded))
+
+		w.Header().Set("Content-Type", "application/xml")
+		w.Write([]byte(plist.PlistXML()))
+	})
+
+	r.Get("/plist/{encoded}/xml", func(w http.ResponseWriter, r *http.Request) {
+		decoded, _ := base64.RawURLEncoding.DecodeString(chi.URLParam(r, "encoded"))
+		plist := NewPlistFromJSON(string(decoded))
+		w.Header().Set("Content-Type", "application/xml")
+		w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s.plist", plist.Label()))
+		w.Write([]byte(plist.PlistXML()))
 	})
 
 	r.Handle("/static/*", http.FileServer(http.FS(fs)))
