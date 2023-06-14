@@ -50,7 +50,8 @@
       <label for="minute">Minute <small><code>0-59</code></small>
         {{ if .Minute.Error }}
         <small class="form-error" id="minute-error">{{ .Minute.Error }}</small>
-        <input type="text" name="minute" id="minute" value="{{ .Minute.Value }}" aria-invalid="true" aria-describedby="minute-error">
+        <input type="text" name="minute" id="minute" value="{{ .Minute.Value }}" aria-invalid="true"
+          aria-describedby="minute-error">
         {{ else }}
         <input type="text" name="minute" id="minute" value="{{ .Minute.Value }}">
         {{ end }}
@@ -58,9 +59,10 @@
 
       <label for="hour">Hour <small><code>0-23</code></small>
         {{ if .Hour.Error }}
-        <input type="text" name="hour" id="hour" >
+        <input type="text" name="hour" id="hour">
         <small class="form-error" id="hour-error">{{ .Hour.Error }}</small>
-        <input type="text" name="hour" id="hour" value="{{ .Hour.Value }}" aria-invalid="true" aria-describedby="hour-error">
+        <input type="text" name="hour" id="hour" value="{{ .Hour.Value }}" aria-invalid="true"
+          aria-describedby="hour-error">
         {{ else }}
         <input type="text" name="hour" id="hour" value="{{ .Hour.Value }}">
         {{ end }}
@@ -69,7 +71,8 @@
       <label for="day_of_month">Day of month <small><code>1-31</code></small>
         {{ if .DayOfMonth.Error }}
         <small class="form-error" id="day-of-month-error">{{ .DayOfMonth.Error }}</small>
-        <input type="text" name="day_of_month" id="day_of_month" value="{{ .DayOfMonth.Value }}" aria-invalid="true" aria-describedby="day-of-month-error">
+        <input type="text" name="day_of_month" id="day_of_month" value="{{ .DayOfMonth.Value }}" aria-invalid="true"
+          aria-describedby="day-of-month-error">
         {{ else }}
         <input type="text" name="day_of_month" id="day_of_month" value="{{ .DayOfMonth.Value }}">
         {{ end }}
@@ -78,7 +81,8 @@
       <label for="month">Month <small><code>1-12</code></small>
         {{ if .Month.Error }}
         <small class="form-error" id="month-error">{{ .Month.Error }}</small>
-        <input type="text" name="month" id="month" value="{{ .Month.Value }}" aria-invalid="true" aria-describedby="month-error">
+        <input type="text" name="month" id="month" value="{{ .Month.Value }}" aria-invalid="true"
+          aria-describedby="month-error">
         {{ else }}
         <input type="text" name="month" id="month" value="{{ .Month.Value }}">
         {{ end }}
@@ -87,7 +91,8 @@
       <label for="weekday">Weekday <small><code>0-6</code></small>
         {{ if .Weekday.Error }}
         <small class="form-error" id="weekday-error">{{ .Weekday.Error }}</small>
-        <input type="text" name="weekday" id="weekday" value="{{ .Weekday.Value }}" aria-invalid="true" aria-describedby="weekday-error">
+        <input type="text" name="weekday" id="weekday" value="{{ .Weekday.Value }}" aria-invalid="true"
+          aria-describedby="weekday-error">
         {{ else }}
         <input type="text" name="weekday" id="weekday" value="{{ .Weekday.Value }}">
         {{ end }}
@@ -101,15 +106,18 @@
       <p>If not scheduled, you can choose to run this other ways:</p>
       <fieldset>
         <label for="run_at_load">
-          <input type="checkbox" id="run_at_load" name="run_at_load" role="switch" {{ if .RunAtLoad.Value }}checked{{ end }}>
+          <input type="checkbox" id="run_at_load" name="run_at_load" role="switch" {{ if .RunAtLoad.Value }}checked{{
+            end }}>
           Run at load
         </label>
         <label for="restart_on_crash">
-          <input type="checkbox" id="restart_on_crash" name="restart_on_crash" role="switch" {{ if .RestartOnCrash.Value }}checked{{ end }}>
+          <input type="checkbox" id="restart_on_crash" name="restart_on_crash" role="switch" {{ if .RestartOnCrash.Value
+            }}checked{{ end }}>
           Restart after crashes (implies run at load)
         </label>
         <label for="start_on_mount">
-          <input type="checkbox" id="start_on_mount" name="start_on_mount" role="switch" {{ if .StartOnMount.Value }}checked{{ end }}>
+          <input type="checkbox" id="start_on_mount" name="start_on_mount" role="switch" {{ if .StartOnMount.Value
+            }}checked{{ end }}>
           Start when any filesystem is mounted
         </label>
       </fieldset>

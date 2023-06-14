@@ -10,6 +10,13 @@ body > footer {
   color: var(--form-element-invalid-border-color);
   float: right;
 }
+.actions {
+  float: right;
+}
+.plist-xml {
+  max-height: 500px;
+  overflow: auto;
+}
 
 @media (min-width: 576px) {
   body > header {

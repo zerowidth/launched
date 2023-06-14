@@ -168,7 +168,7 @@ func (p LaunchdPlist) CronIntervals() []map[string]int {
 
 func (p LaunchdPlist) EnvironmentMap() map[string]string {
 	env := map[string]string{}
-	for _, line := range strings.Split(p.Environment, "\n") {
+	for _, line := range strings.Split(p.Environment, "\r\n") {
 		if left, right, found := strings.Cut(line, "="); found {
 			env[left] = right
 		}

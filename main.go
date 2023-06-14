@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"os"
 	"reflect"
+	"strings"
 	"time"
 
 	"github.com/go-chi/chi/v5"
@@ -107,12 +108,18 @@ func serve() {
 	r.Get("/plist/{encoded}", func(w http.ResponseWriter, r *http.Request) {
 		decoded, _ := base64.RawURLEncoding.DecodeString(chi.URLParam(r, "encoded"))
 		plist := NewPlistFromJSON(string(decoded))
+		layout := template.Must(template.ParseFS(fs, "templates/layout.html", "templates/plist.html"))
+		layout.Execute(w, plist)
+	})
 
+	r.Get("/plist/{encoded}/xml", func(w http.ResponseWriter, r *http.Request) {
+		decoded, _ := base64.RawURLEncoding.DecodeString(chi.URLParam(r, "encoded"))
+		plist := NewPlistFromJSON(string(decoded))
 		w.Header().Set("Content-Type", "application/xml")
 		w.Write([]byte(plist.PlistXML()))
 	})
 
-	r.Get("/plist/{encoded}/xml", func(w http.ResponseWriter, r *http.Request) {
+	r.Get("/plist/{encoded}/download", func(w http.ResponseWriter, r *http.Request) {
 		decoded, _ := base64.RawURLEncoding.DecodeString(chi.URLParam(r, "encoded"))
 		plist := NewPlistFromJSON(string(decoded))
 		w.Header().Set("Content-Type", "application/xml")
@@ -143,12 +150,18 @@ func requestLogger(logger *zap.Logger) func(next http.Handler) http.Handler {
 			start := time.Now()
 			next.ServeHTTP(wrapper, r)
 
+			remoteAddr := r.RemoteAddr
+			if r.Header.Get("X-Forwarded-For") != "" {
+				remoteAddr = strings.Split(r.Header.Get("X-Forwarded-For"), ",")[0]
+			}
+
 			logger.Info("request completed",
 				zap.String("method", r.Method),
 				zap.Int("status", wrapper.Status()),
 				zap.Int("bytes", wrapper.BytesWritten()),
-				zap.String("remote", r.RemoteAddr),
+				zap.String("remote", remoteAddr),
 				zap.String("host", r.Host),
+				zap.String("url", r.URL.String()),
 				zap.String("path", r.URL.Path),
 				zap.String("user-agent", r.UserAgent()),
 				zap.Duration("duration", time.Since(start)),
