@@ -1,0 +1,60 @@
+body > header {
+  border-bottom: 1px solid var(--muted-border-color);
+  background-color: var(--card-sectionning-background-color);
+}
+body > footer {
+  border-top: 1px solid var(--muted-border-color);
+  background-color: var(--card-sectionning-background-color);
+}
+.form-error {
+  color: var(--form-element-invalid-border-color);
+  float: right;
+}
+.actions {
+  text-align: right;
+}
+.plist-xml {
+  max-height: 500px;
+  overflow: auto;
+}
+
+@media (min-width: 576px) {
+  body > header {
+    --block-spacing-vertical: 0;
+  }
+  body > main,
+  body > footer,
+  section {
+    --block-spacing-vertical: var(--spacing);
+  }
+}
+@media (min-width: 768px) {
+  body > header {
+    --block-spacing-vertical: 0;
+  }
+  body > main,
+  body > footer,
+  section {
+    --block-spacing-vertical: var(--spacing);
+  }
+}
+@media (min-width: 992px) {
+  body > header {
+    --block-spacing-vertical: 0;
+  }
+  body > main,
+  body > footer,
+  section {
+    --block-spacing-vertical: var(--spacing);
+  }
+}
+@media (min-width: 1200px) {
+  body > header {
+    --block-spacing-vertical: 0;
+  }
+  body > main,
+  body > footer,
+  section {
+    --block-spacing-vertical: var(--spacing);
+  }
+}

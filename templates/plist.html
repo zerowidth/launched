@@ -1,0 +1,42 @@
+{{define "content"}}
+{{- $filename := printf "%s.plist" .Plist.Label -}}
+{{- $plist_path := printf "/plists/%s" .Plist.ID -}}
+{{- $plist_url := printf "%s/plists/%s" .RootURL .Plist.ID -}}
+<article>
+  <header>
+    <p><code>{{ $filename }}</code></p>
+  </header>
+
+  <p class="actions">
+    <small>
+      <a href="{{ $plist_path }}/edit">Edit</a> &middot;
+      <a href="#" class="clipboard" data-clipboard-target="#xml">Copy to clipboard</a> &middot;
+      <a href="{{ $plist_path }}.xml">View raw</a> &middot;
+      <a href="{{ $plist_path }}/download">Download</a>
+    </small>
+  </p>
+
+  <pre class="plist-xml"><code id="xml">{{ .Plist.PlistXML }}</code></pre>
+
+  <p>
+    To install:
+    <small>
+      <code id="install">curl {{ $plist_url }}/install | sh</code>
+      <a href="#" class="clipboard" data-clipboard-target="#install">Copy to clipboard</a> &middot;
+      <a href="{{ $plist_path }}/install">View install script</a>
+    </small>
+  </p>
+
+  <p>To install manually:</p>
+
+  <pre><code>mkdir -p ~/Library/LaunchAgents
+curl -o ~/Library/LaunchAgents/{{ $filename }} {{ $plist_url }}.xml
+launchctl load -w ~/Library/LaunchAgents/{{ $filename }}</code></pre>
+
+  <p>Or, to install as root:</p>
+  <pre><code>curl -o ~/Downloads/{{ $filename }} {{ $plist_url }}.xml
+sudo cp ~/Downloads/{{ $filename }} /Library/LaunchDaemons
+sudo launchctl load -w /Library/LaunchDaemons/{{ $filename }}</code></pre>
+
+</article>
+{{end}}

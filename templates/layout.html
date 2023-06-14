@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/pico.min.css">
+  <link rel="stylesheet" href="/static/custom.css">
+  <script src="/static/clipboard.min.js"></script>
+  <title>Launched - A Plist Generator</title>
+</head>
+
+<body>
+  <header class="container-fluid">
+    <nav>
+      <ul>
+        <li><a href="/">Launched</a></li>
+        <li>A launchd plist generator</li>
+      </ul>
+      <ul>
+        <li><a href="/help">Help</a></li>
+      </ul>
+    </nav>
+  </header>
+  <main class="container">
+    {{ template "content" . }}
+  </main>
+  <footer class="container-fluid">
+    <p>
+      Built by <a href="https://zerowidth.com">@zerowidth</a>,
+      hosted on <a href="https://fly.io">fly.io</a>,
+      <a href="https://github.com/zerowidth/launched">source on github</a>.
+    </p>
+  </footer>
+  <script>new ClipboardJS('.clipboard');</script>
+</body>
+
+</html>

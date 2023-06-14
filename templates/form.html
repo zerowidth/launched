@@ -1,0 +1,176 @@
+{{define "content"}}
+<form action="/plists" method="post">
+  <article>
+    <header>Basics</header>
+    <label for="name">Name
+      {{if .Name.Error}}
+      <small class="form-error" id="name-error">{{ .Name.Error }}</small>
+      <input type="text" name="name" id="name" value="{{ .Name.Value }}" aria-invalid="true"
+        aria-describedby="name-error">
+      {{else}}
+      <input type="text" name="name" id="name" value="{{ .Name.Value }}">
+      {{end}}
+      <small>Prefixed with <code>launched.</code></small>
+    </label>
+    <label for="command">Command
+      {{ if .Command.Error }}
+      <small class="form-error" id="command-error">{{ .Command.Error }}</small>
+      <input type="text" name="command" id="command" value="{{ .Command.Value }}" aria-invalid="true"
+        aria-describedby="command-error">
+      {{ else }}
+      <input type="text" name="command" id="command" value="{{ .Command.Value }}">
+      {{ end }}
+      <small>Runs with <code>sh -c</code></small>
+    </label>
+  </article>
+
+  <article>
+    <header>Schedule</header>
+
+    <div class="grid">
+      <p>You can run your command at a regular interval and/or a schedule defined with cron-style expressions like
+        <small><code>&lt;number&gt;,&lt;number&gt;,...</code></small>,
+        <small><code>&lt;start&gt;-&lt;end&gt;</code></small>, and <small><code>*/&lt;interval&gt;</code></small>.
+        <small><code>*</code></small> on empty fields is implied if any other cron field is set.
+      </p>
+
+      <label for="start_interval">Start interval
+        {{ if .StartInterval.Error }}
+        <small class="form-error" id="start-interval-error">{{ .StartInterval.Error }}</small>
+        <input type="text" name="start_interval" id="start_interval" value="{{.StartInterval.Value}}"
+          aria-invalid="true" aria-describedby="start-interval-error">
+        {{ else }}
+        <input type="text" name="start_interval" id="start_interval" value="{{.StartInterval.Value}}">
+        {{ end }}
+        <small>Run at this interval (seconds)</small>
+      </label>
+
+    </div>
+
+    <div class="grid">
+      <label for="minute">Minute <small><code>0-59</code></small>
+        {{ if .Minute.Error }}
+        <small class="form-error" id="minute-error">{{ .Minute.Error }}</small>
+        <input type="text" name="minute" id="minute" value="{{ .Minute.Value }}" aria-invalid="true"
+          aria-describedby="minute-error">
+        {{ else }}
+        <input type="text" name="minute" id="minute" value="{{ .Minute.Value }}">
+        {{ end }}
+      </label>
+
+      <label for="hour">Hour <small><code>0-23</code></small>
+        {{ if .Hour.Error }}
+        <input type="text" name="hour" id="hour">
+        <small class="form-error" id="hour-error">{{ .Hour.Error }}</small>
+        <input type="text" name="hour" id="hour" value="{{ .Hour.Value }}" aria-invalid="true"
+          aria-describedby="hour-error">
+        {{ else }}
+        <input type="text" name="hour" id="hour" value="{{ .Hour.Value }}">
+        {{ end }}
+      </label>
+
+      <label for="day_of_month">Day of month <small><code>1-31</code></small>
+        {{ if .DayOfMonth.Error }}
+        <small class="form-error" id="day-of-month-error">{{ .DayOfMonth.Error }}</small>
+        <input type="text" name="day_of_month" id="day_of_month" value="{{ .DayOfMonth.Value }}" aria-invalid="true"
+          aria-describedby="day-of-month-error">
+        {{ else }}
+        <input type="text" name="day_of_month" id="day_of_month" value="{{ .DayOfMonth.Value }}">
+        {{ end }}
+      </label>
+
+      <label for="month">Month <small><code>1-12</code></small>
+        {{ if .Month.Error }}
+        <small class="form-error" id="month-error">{{ .Month.Error }}</small>
+        <input type="text" name="month" id="month" value="{{ .Month.Value }}" aria-invalid="true"
+          aria-describedby="month-error">
+        {{ else }}
+        <input type="text" name="month" id="month" value="{{ .Month.Value }}">
+        {{ end }}
+      </label>
+
+      <label for="weekday">Weekday <small><code>0-6</code></small>
+        {{ if .Weekday.Error }}
+        <small class="form-error" id="weekday-error">{{ .Weekday.Error }}</small>
+        <input type="text" name="weekday" id="weekday" value="{{ .Weekday.Value }}" aria-invalid="true"
+          aria-describedby="weekday-error">
+        {{ else }}
+        <input type="text" name="weekday" id="weekday" value="{{ .Weekday.Value }}">
+        {{ end }}
+      </label>
+    </div>
+  </article>
+
+  <article>
+    <header>Daemon</header>
+    <div class="grid">
+      <p>If not scheduled, you can choose to run this other ways:</p>
+      <fieldset>
+        <label for="run_at_load">
+          <input type="checkbox" id="run_at_load" name="run_at_load" role="switch" {{ if .RunAtLoad.Value }}checked{{
+            end }}>
+          Run at load
+        </label>
+        <label for="restart_on_crash">
+          <input type="checkbox" id="restart_on_crash" name="restart_on_crash" role="switch" {{ if .RestartOnCrash.Value
+            }}checked{{ end }}>
+          Restart after crashes (implies run at load)
+        </label>
+        <label for="start_on_mount">
+          <input type="checkbox" id="start_on_mount" name="start_on_mount" role="switch" {{ if .StartOnMount.Value
+            }}checked{{ end }}>
+          Start when any filesystem is mounted
+        </label>
+      </fieldset>
+    </div>
+    <label for="queue_directories">
+      Queue directories
+      <input type="text" name="queue_directories" id="queue_directories" value="{{ .QueueDirectories.Value }}">
+      <small>Comma-separated list of directories. Job will run as long as these directories are not empty.</small>
+    </label>
+  </article>
+
+  <article>
+    <label for="environment">
+      Environment
+      <textarea name="environment" id="environment" rows="5">{{ .Environment.Value }}</textarea>
+      <small>Environment variables, one per line, in <code>NAME=value</code> format</small>
+    </label>
+
+    <div class="grid">
+      <label for="user">User
+        <input type="text" name="user" id="user" value="{{ .User.Value }}">
+        <small>Run as this user</small>
+      </label>
+
+      <label for="group">Group
+        <input type="text" name="group" id="group" value="{{ .Group.Value }}">
+        <small>and/or this group</small>
+      </label>
+    </div>
+    <div class="grid">
+      <label for="working_directory">Working directory
+        <input type="text" name="working_directory" id="working_directory" value="{{ .WorkingDirectory.Value }}">
+        <small>Run in this working directory</small>
+      </label>
+      <label for="root_directory">Root directory
+        <input type="text" name="root_directory" id="root_directory" value="{{ .RootDirectory.Value }}">
+        <small>Run with chroot in this directory</small>
+      </label>
+    </div>
+    <div class="grid">
+      <label for="standard_out_path">Standard out path
+        <input type="text" name="standard_out_path" id="standard_out_path" value="{{.StandardOutPath.Value}}">
+        <small>Log standard out to this path</small>
+      </label>
+
+      <label for="standard_error_path">Standard error path
+        <input type="text" name="standard_error_path" id="standard_error_path" value="{{.StandardErrorPath.Value}}">
+        <small>Log standard error to this path</small>
+      </label>
+    </div>
+  </article>
+
+  <input type="submit" value="Create Plist">
+</form>
+{{end}}
