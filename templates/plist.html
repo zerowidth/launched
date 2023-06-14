@@ -1,7 +1,7 @@
 {{define "content"}}
 {{- $filename := printf "%s.plist" .Plist.Label -}}
-{{- $plist_path := printf "/plist/%s" .Plist.ID -}}
-{{- $plist_url := printf "%s/plist/%s" .RootURL .Plist.ID -}}
+{{- $plist_path := printf "/plists/%s" .Plist.ID -}}
+{{- $plist_url := printf "%s/plists/%s" .RootURL .Plist.ID -}}
 <article>
   <header>
     <p><code>{{ $filename }}</code></p>

@@ -95,7 +95,7 @@ func serve() {
 		layout.Execute(w, form)
 	})
 
-	r.Post("/plist", func(w http.ResponseWriter, r *http.Request) {
+	r.Post("/plists", func(w http.ResponseWriter, r *http.Request) {
 		r.ParseForm()
 		plist := NewPlistFromForm(r.PostForm)
 		errors := plist.Validate()
@@ -111,10 +111,10 @@ func serve() {
 			http.Error(w, "could not save plist", http.StatusInternalServerError)
 			return
 		}
-		http.Redirect(w, r, "/plist/"+id, http.StatusSeeOther)
+		http.Redirect(w, r, "/plists/"+id, http.StatusSeeOther)
 	})
 
-	r.Get("/plist/{id}", func(w http.ResponseWriter, r *http.Request) {
+	r.Get("/plists/{id}", func(w http.ResponseWriter, r *http.Request) {
 		proto := r.Header.Get("X-Forwarded-Proto")
 		if proto == "" {
 			proto = "http"
@@ -145,7 +145,7 @@ func serve() {
 		layout.Execute(w, context)
 	})
 
-	r.Get("/plist/{id}/install", func(w http.ResponseWriter, r *http.Request) {
+	r.Get("/plists/{id}/install", func(w http.ResponseWriter, r *http.Request) {
 		proto := r.Header.Get("X-Forwarded-Proto")
 		if proto == "" {
 			proto = "http"
@@ -176,7 +176,7 @@ func serve() {
 		layout.Execute(w, context)
 	})
 
-	r.Get("/plist/{id}.xml", func(w http.ResponseWriter, r *http.Request) {
+	r.Get("/plists/{id}.xml", func(w http.ResponseWriter, r *http.Request) {
 		plist, ok, err := store.Load(chi.URLParam(r, "id"))
 		if err != nil {
 			logger.Error("error loading plist", zap.Error(err))
@@ -192,7 +192,7 @@ func serve() {
 		w.Write([]byte(plist.PlistXML()))
 	})
 
-	r.Get("/plist/{id}/download", func(w http.ResponseWriter, r *http.Request) {
+	r.Get("/plists/{id}/download", func(w http.ResponseWriter, r *http.Request) {
 		plist, ok, err := store.Load(chi.URLParam(r, "id"))
 		if err != nil {
 			logger.Error("error loading plist", zap.Error(err))
@@ -209,7 +209,7 @@ func serve() {
 		w.Write([]byte(plist.PlistXML()))
 	})
 
-	r.Get("/plist/{id}/edit", func(w http.ResponseWriter, r *http.Request) {
+	r.Get("/plists/{id}/edit", func(w http.ResponseWriter, r *http.Request) {
 		plist, ok, err := store.Load(chi.URLParam(r, "id"))
 		if err != nil {
 			logger.Error("error loading plist", zap.Error(err))

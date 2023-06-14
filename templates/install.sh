@@ -1,5 +1,5 @@
 {{- $filename := printf "%s.plist" .Plist.Label -}}
-{{- $url := printf "%s/plist/%s.xml" .RootURL .Plist.ID -}}
+{{- $url := printf "%s/plists/%s.xml" .RootURL .Plist.ID -}}
 echo downloading {{ $filename }}...
 mkdir -p ~/Library/LaunchAgents
 curl -o ~/Library/LaunchAgents/{{ $filename }} {{ $url }}
