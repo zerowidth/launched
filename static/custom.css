@@ -11,7 +11,7 @@ body > footer {
   float: right;
 }
 .actions {
-  float: right;
+  text-align: right;
 }
 .plist-xml {
   max-height: 500px;
