@@ -76,11 +76,11 @@ func serve() {
 	logger, _ := zap.NewDevelopment()
 	defer logger.Sync()
 
-	var fs fs.FS
+	var staticFiles fs.FS
 	if development {
-		fs = os.DirFS(".")
+		staticFiles = os.DirFS(".")
 	} else {
-		fs = assets
+		staticFiles = assets
 	}
 
 	r := chi.NewRouter()
@@ -88,7 +88,7 @@ func serve() {
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		form := PlistForm{}
-		layout := template.Must(template.ParseFS(fs, "templates/layout.html", "templates/form.html"))
+		layout := template.Must(template.ParseFS(staticFiles, "templates/layout.html", "templates/form.html"))
 		layout.Execute(w, form)
 	})
 
@@ -98,7 +98,7 @@ func serve() {
 		errors := plist.Validate()
 		if errors != nil {
 			form := NewPlistForm(plist, errors)
-			layout := template.Must(template.ParseFS(fs, "templates/layout.html", "templates/form.html"))
+			layout := template.Must(template.ParseFS(staticFiles, "templates/layout.html", "templates/form.html"))
 			layout.Execute(w, form)
 			return
 		}
@@ -121,7 +121,7 @@ func serve() {
 			Plist:   plist,
 			RootURL: url,
 		}
-		layout := template.Must(template.ParseFS(fs, "templates/layout.html", "templates/plist.html"))
+		layout := template.Must(template.ParseFS(staticFiles, "templates/layout.html", "templates/plist.html"))
 		layout.Execute(w, context)
 	})
 
@@ -141,7 +141,7 @@ func serve() {
 			Plist:   plist,
 			RootURL: url,
 		}
-		layout := template.Must(template.ParseFS(fs, "templates/install.sh"))
+		layout := template.Must(template.ParseFS(staticFiles, "templates/install.sh"))
 		r.Header.Set("Content-Type", "text/plain; charset=utf-8")
 		layout.Execute(w, context)
 	})
@@ -165,11 +165,20 @@ func serve() {
 		decoded, _ := base64.RawURLEncoding.DecodeString(chi.URLParam(r, "encoded"))
 		plist := NewPlistFromJSON(string(decoded))
 		form := NewPlistForm(plist, nil)
-		layout := template.Must(template.ParseFS(fs, "templates/layout.html", "templates/form.html"))
+		layout := template.Must(template.ParseFS(staticFiles, "templates/layout.html", "templates/form.html"))
 		layout.Execute(w, form)
 	})
 
-	r.Handle("/static/*", http.FileServer(http.FS(fs)))
+	r.Get("/help", func(w http.ResponseWriter, r *http.Request) {
+		layout := template.Must(template.ParseFS(staticFiles, "templates/layout.html", "templates/help.html"))
+		layout.Execute(w, nil)
+	})
+	r.Get("/favicon.ico", func(w http.ResponseWriter, r *http.Request) {
+		ico, _ := fs.ReadFile(staticFiles, "static/favicon.ico")
+		w.Write(ico)
+	})
+
+	r.Handle("/static/*", http.FileServer(http.FS(staticFiles)))
 
 	logger.Info("starting server", zap.String("listen-address", listenAddress), zap.Bool("development", development))
 	if err := http.ListenAndServe(listenAddress, r); err != nil {
