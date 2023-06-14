@@ -1,47 +1,25 @@
-# fly.toml app configuration file generated for launched on 2023-05-26T16:57:15-06:00
+# fly.toml app configuration file generated for launched-go on 2023-06-13T19:54:40-06:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = "launched"
-primary_region = "iad"
-kill_signal = "SIGINT"
-kill_timeout = "5s"
+app = "launched-go"
+primary_region = "den"
 
-[experimental]
-  auto_rollback = true
+[build]
+  builder = "paketobuildpacks/builder:base"
+  buildpacks = ["gcr.io/paketo-buildpacks/go"]
 
-[deploy]
-  release_command = "bin/rails fly:release"
+[processes]
+  server = "launched-go --listen-address localhost:8080 --redis-address fly-launched-redis.upstash.io"
 
 [env]
   PORT = "8080"
-  SERVER_COMMAND = "bin/rails fly:server"
 
-[[services]]
-  protocol = "tcp"
+[http_service]
+  processes = ["server"]
   internal_port = 8080
-  processes = ["app"]
-
-  [[services.ports]]
-    port = 80
-    handlers = ["http"]
-    force_https = true
-
-  [[services.ports]]
-    port = 443
-    handlers = ["tls", "http"]
-  [services.concurrency]
-    type = "connections"
-    hard_limit = 25
-    soft_limit = 20
-
-  [[services.tcp_checks]]
-    interval = "15s"
-    timeout = "2s"
-    grace_period = "1s"
-    restart_limit = 0
-
-[[statics]]
-  guest_path = "/app/public"
-  url_prefix = "/"
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 0
