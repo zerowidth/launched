@@ -107,7 +107,8 @@ func serve() {
 		}
 		id, err := store.Save(plist)
 		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
+			logger.Error("error saving plist", zap.Error(err))
+			http.Error(w, "could not save plist", http.StatusInternalServerError)
 			return
 		}
 		http.Redirect(w, r, "/plist/"+id, http.StatusSeeOther)
