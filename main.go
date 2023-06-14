@@ -39,7 +39,7 @@ var decoder *form.Decoder
 
 func init() {
 	rootCmd.PersistentFlags().BoolVarP(&development, "development", "d", false, "run development mode to live-reload templates and static files")
-	rootCmd.PersistentFlags().StringVarP(&listenAddress, "listen-address", "l", "0.0.0.0:8080", "address to listen on")
+	rootCmd.PersistentFlags().StringVarP(&listenAddress, "listen-address", "l", "localhost:3000", "address to listen on")
 	rootCmd.PersistentFlags().StringVarP(&redisAddress, "redis-address", "r", "localhost:6379", "address of redis server")
 
 	decoder = form.NewDecoder()
