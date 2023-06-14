@@ -68,7 +68,7 @@ func TestGenerateCronIntervals_SparseCombo(t *testing.T) {
 	)
 }
 
-// this is slow, obviously, generating 3.8 million combinations
+// not testing _all_ stars cuz that's 3.8 million
 func TestGenerateCronIntervals_ItsAllStars(t *testing.T) {
-	assert.Len(t, GenerateCronIntervals("*", "*", "*", "*", "*"), 60*24*31*12*7)
+	assert.Len(t, GenerateCronIntervals("*/2", "*/4", "*", "*/3", "*"), 30*6*31*4*7)
 }
