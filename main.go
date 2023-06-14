@@ -125,7 +125,28 @@ func serve() {
 		layout.Execute(w, context)
 	})
 
-	r.Get("/plist/{encoded}/xml", func(w http.ResponseWriter, r *http.Request) {
+	r.Get("/plist/{encoded}/install", func(w http.ResponseWriter, r *http.Request) {
+		proto := r.Header.Get("X-Forwarded-Proto")
+		if proto == "" {
+			proto = "http"
+		}
+		host := r.Host
+		url := fmt.Sprintf("%s://%s", proto, host)
+		decoded, _ := base64.RawURLEncoding.DecodeString(chi.URLParam(r, "encoded"))
+		plist := NewPlistFromJSON(string(decoded))
+		context := struct {
+			Plist   LaunchdPlist
+			RootURL string
+		}{
+			Plist:   plist,
+			RootURL: url,
+		}
+		layout := template.Must(template.ParseFS(fs, "templates/install.sh"))
+		r.Header.Set("Content-Type", "text/plain; charset=utf-8")
+		layout.Execute(w, context)
+	})
+
+	r.Get("/plist/{encoded}.xml", func(w http.ResponseWriter, r *http.Request) {
 		decoded, _ := base64.RawURLEncoding.DecodeString(chi.URLParam(r, "encoded"))
 		plist := NewPlistFromJSON(string(decoded))
 		w.Header().Set("Content-Type", "application/xml")

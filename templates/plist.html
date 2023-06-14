@@ -6,19 +6,17 @@
   <p>Running <code>{{ .Plist.Command }}</code>:
     <span class="actions">
       <a href="{{ .Plist.Encode }}/edit">Edit</a> &middot;
-      <a href="#">Copy to clipboard</a> &middot;
+      <a href="#" class=""clipboard" data-clipboard-target="#xml">Copy to clipboard</a> &middot;
       <a href="{{ .Plist.Encode }}.xml">View raw</a> &middot;
       <a href="{{ .Plist.Encode }}/download">Download</a>
     </span>
   </p>
-  <pre class="plist-xml">
-    <code>{{ .Plist.PlistXML }}</code>
-  </pre>
+  <pre class="plist-xml"><code id="xml">{{ .Plist.PlistXML }}</code></pre>
 
   <p>
     To install:
     <small><code id="install">curl {{ .RootURL }}/{{.Plist.Encode}}/install | sh</code></small>
-    <a href="#" class="clipboard" data-clipboard-target="#install">copy to clipboard</a> &middot;
+    <a href="#" class="clipboard" data-clipboard-target="#install">Copy to clipboard</a> &middot;
     <a href="{{ .Plist.Encode }}/install">View install script</a>
   </p>
   
@@ -29,7 +27,7 @@ curl -o ~/Library/LaunchAgents/{{ .Plist.Label }}.plist {{ .RootURL }}/{{ .Plist
 launchctl load -w ~/Library/LaunchAgents/{{ .Plist.Label }}.plist</code></pre>
   
   <p>Or, to install as root:</p>
-  <pre><code>curl -o ~/Downloads/{{ .Plist.Label }}.plist {{ .RootUrl }}/{{ .Plist.Encode }}.xml
+  <pre><code>curl -o ~/Downloads/{{ .Plist.Label }}.plist {{ .RootURL }}/{{ .Plist.Encode }}.xml
 sudo cp ~/Downloads/{{ .Plist.Label }}.plist /Library/LaunchDaemons
 sudo launchctl load -w /Library/LaunchDaemons/{{ .Plist.Label }}.plist</code></pre>
 
