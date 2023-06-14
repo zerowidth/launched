@@ -11,7 +11,7 @@ primary_region = "den"
   buildpacks = ["gcr.io/paketo-buildpacks/go"]
 
 [processes]
-  server = "launched-go --listen-address localhost:8080 --redis-address fly-launched-redis.upstash.io"
+  server = "launched --listen-address 0.0.0.0:8080 --redis-address fly-launched-redis.upstash.io:6379"
 
 [env]
   PORT = "8080"
