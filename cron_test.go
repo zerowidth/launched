@@ -24,7 +24,11 @@ func TestGenerateCronIntervals_Ranges(t *testing.T) {
 	)
 }
 
-func TestGenerateCronIntervals_Stars(t *testing.T) {
+func TestGenerateCronIntervals_StarsIgnored(t *testing.T) {
+	assert.Empty(t, GenerateCronIntervals("*", "*", "*", "*", "*"))
+}
+
+func TestGenerateCronIntervals_StarDivisors(t *testing.T) {
 	assert.Equal(
 		t,
 		[]map[string]int{
@@ -68,7 +72,6 @@ func TestGenerateCronIntervals_SparseCombo(t *testing.T) {
 	)
 }
 
-// not testing _all_ stars cuz that's 3.8 million
 func TestGenerateCronIntervals_ItsAllStars(t *testing.T) {
-	assert.Len(t, GenerateCronIntervals("*/2", "*/4", "*", "*/3", "*"), 30*6*31*4*7)
+	assert.Len(t, GenerateCronIntervals("*/2", "*/4", "*", "*/3", "*"), 30*6*4)
 }

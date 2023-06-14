@@ -95,6 +95,9 @@ func cronIntervals(cron string, min, max int) []int {
 			if matches[2] != "" {
 				divisor, _ = strconv.Atoi(matches[2])
 			}
+			if divisor == 1 {
+				continue
+			}
 			for i := min; i <= max; i++ {
 				if i%divisor == 0 {
 					set[i] = struct{}{}
