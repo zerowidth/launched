@@ -2,7 +2,6 @@ package main
 
 import (
 	"embed"
-	"encoding/base64"
 	"fmt"
 	"html/template"
 	"io/fs"
@@ -30,6 +29,7 @@ var rootCmd = &cobra.Command{
 
 var development bool
 var listenAddress string
+var redisAddress string
 
 //go:embed static templates
 var assets embed.FS
@@ -40,6 +40,7 @@ var decoder *form.Decoder
 func init() {
 	rootCmd.PersistentFlags().BoolVarP(&development, "development", "d", false, "run development mode to live-reload templates and static files")
 	rootCmd.PersistentFlags().StringVarP(&listenAddress, "listen-address", "l", "0.0.0.0:8080", "address to listen on")
+	rootCmd.PersistentFlags().StringVarP(&redisAddress, "redis-address", "r", "localhost:6379", "address of redis server")
 
 	decoder = form.NewDecoder()
 }
@@ -83,6 +84,8 @@ func serve() {
 		staticFiles = assets
 	}
 
+	store := NewPlistStore(redisAddress, os.Getenv("REDIS_PASSWORD"))
+
 	r := chi.NewRouter()
 	r.Use(requestLogger(logger))
 
@@ -102,18 +105,33 @@ func serve() {
 			layout.Execute(w, form)
 			return
 		}
-		http.Redirect(w, r, "/plist/"+plist.Encode(), http.StatusSeeOther)
+		id, err := store.Save(plist)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+		http.Redirect(w, r, "/plist/"+id, http.StatusSeeOther)
 	})
 
-	r.Get("/plist/{encoded}", func(w http.ResponseWriter, r *http.Request) {
+	r.Get("/plist/{id}", func(w http.ResponseWriter, r *http.Request) {
 		proto := r.Header.Get("X-Forwarded-Proto")
 		if proto == "" {
 			proto = "http"
 		}
 		host := r.Host
 		url := fmt.Sprintf("%s://%s", proto, host)
-		decoded, _ := base64.RawURLEncoding.DecodeString(chi.URLParam(r, "encoded"))
-		plist := NewPlistFromJSON(string(decoded))
+
+		plist, ok, err := store.Load(chi.URLParam(r, "id"))
+		if err != nil {
+			logger.Error("error loading plist", zap.Error(err))
+			http.Error(w, "could not load plist", http.StatusInternalServerError)
+			return
+		}
+		if !ok {
+			http.Error(w, "not found", http.StatusNotFound)
+			return
+		}
+
 		context := struct {
 			Plist   LaunchdPlist
 			RootURL string
@@ -121,19 +139,30 @@ func serve() {
 			Plist:   plist,
 			RootURL: url,
 		}
+
 		layout := template.Must(template.ParseFS(staticFiles, "templates/layout.html", "templates/plist.html"))
 		layout.Execute(w, context)
 	})
 
-	r.Get("/plist/{encoded}/install", func(w http.ResponseWriter, r *http.Request) {
+	r.Get("/plist/{id}/install", func(w http.ResponseWriter, r *http.Request) {
 		proto := r.Header.Get("X-Forwarded-Proto")
 		if proto == "" {
 			proto = "http"
 		}
 		host := r.Host
 		url := fmt.Sprintf("%s://%s", proto, host)
-		decoded, _ := base64.RawURLEncoding.DecodeString(chi.URLParam(r, "encoded"))
-		plist := NewPlistFromJSON(string(decoded))
+
+		plist, ok, err := store.Load(chi.URLParam(r, "id"))
+		if err != nil {
+			logger.Error("error loading plist", zap.Error(err))
+			http.Error(w, "could not load plist", http.StatusInternalServerError)
+			return
+		}
+		if !ok {
+			http.Error(w, "not found", http.StatusNotFound)
+			return
+		}
+
 		context := struct {
 			Plist   LaunchdPlist
 			RootURL string
@@ -146,24 +175,51 @@ func serve() {
 		layout.Execute(w, context)
 	})
 
-	r.Get("/plist/{encoded}.xml", func(w http.ResponseWriter, r *http.Request) {
-		decoded, _ := base64.RawURLEncoding.DecodeString(chi.URLParam(r, "encoded"))
-		plist := NewPlistFromJSON(string(decoded))
+	r.Get("/plist/{id}.xml", func(w http.ResponseWriter, r *http.Request) {
+		plist, ok, err := store.Load(chi.URLParam(r, "id"))
+		if err != nil {
+			logger.Error("error loading plist", zap.Error(err))
+			http.Error(w, "could not load plist", http.StatusInternalServerError)
+			return
+		}
+		if !ok {
+			http.Error(w, "not found", http.StatusNotFound)
+			return
+		}
+
 		w.Header().Set("Content-Type", "application/xml")
 		w.Write([]byte(plist.PlistXML()))
 	})
 
-	r.Get("/plist/{encoded}/download", func(w http.ResponseWriter, r *http.Request) {
-		decoded, _ := base64.RawURLEncoding.DecodeString(chi.URLParam(r, "encoded"))
-		plist := NewPlistFromJSON(string(decoded))
+	r.Get("/plist/{id}/download", func(w http.ResponseWriter, r *http.Request) {
+		plist, ok, err := store.Load(chi.URLParam(r, "id"))
+		if err != nil {
+			logger.Error("error loading plist", zap.Error(err))
+			http.Error(w, "could not load plist", http.StatusInternalServerError)
+			return
+		}
+		if !ok {
+			http.Error(w, "not found", http.StatusNotFound)
+			return
+		}
+
 		w.Header().Set("Content-Type", "application/xml")
 		w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s.plist", plist.Label()))
 		w.Write([]byte(plist.PlistXML()))
 	})
 
-	r.Get("/plist/{encoded}/edit", func(w http.ResponseWriter, r *http.Request) {
-		decoded, _ := base64.RawURLEncoding.DecodeString(chi.URLParam(r, "encoded"))
-		plist := NewPlistFromJSON(string(decoded))
+	r.Get("/plist/{id}/edit", func(w http.ResponseWriter, r *http.Request) {
+		plist, ok, err := store.Load(chi.URLParam(r, "id"))
+		if err != nil {
+			logger.Error("error loading plist", zap.Error(err))
+			http.Error(w, "could not load plist", http.StatusInternalServerError)
+			return
+		}
+		if !ok {
+			http.Error(w, "not found", http.StatusNotFound)
+			return
+		}
+
 		form := NewPlistForm(plist, nil)
 		layout := template.Must(template.ParseFS(staticFiles, "templates/layout.html", "templates/form.html"))
 		layout.Execute(w, form)

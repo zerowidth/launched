@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"encoding/base64"
 	"encoding/json"
 	"net/url"
 	"regexp"
@@ -62,36 +61,32 @@ func init() {
 // JSON encoded launchd plist, for encoded use in URL path.
 // Uses string types to easily allow for empty values.
 type LaunchdPlist struct {
-	Name              string `json:"name,omitempty" form:"name" validate:"required"`
-	Command           string `json:"command,omitempty" form:"command" validate:"required"`
-	StartInterval     string `json:"start_interval,omitempty" form:"start_interval" validate:"omitempty,number"`
-	Minute            string `json:"minute,omitempty" form:"minute" validate:"minute-cron"`
-	Hour              string `json:"hour,omitempty" form:"hour" validate:"hour-cron"`
-	DayOfMonth        string `json:"day_of_month,omitempty" form:"day_of_month" validate:"day-of-month-cron"`
-	Month             string `json:"month,omitempty" form:"month" validate:"month-cron"`
-	Weekday           string `json:"weekday,omitempty" form:"weekday" validate:"weekday-cron"`
-	RunAtLoad         string `json:"run_at_load" form:"run_at_load"`
-	RestartOnCrash    string `json:"restart_on_crash" form:"restart_on_crash"`
-	StartOnMount      string `json:"start_on_mount" form:"start_on_mount"`
-	QueueDirectories  string `json:"queue_directories,omitempty" form:"queue_directories"`
-	Environment       string `json:"environment,omitempty" form:"environment"`
-	User              string `json:"user,omitempty" form:"user"`
-	Group             string `json:"group,omitempty" form:"group"`
-	WorkingDirectory  string `json:"working_directory,omitempty" form:"working_directory"`
-	RootDirectory     string `json:"root_directory,omitempty" form:"root_directory"`
-	StandardOutPath   string `json:"standard_out_path,omitempty" form:"standard_out_path"`
-	StandardErrorPath string `json:"standard_error_path,omitempty" form:"standard_error_path"`
+	ID                string // set when loaded
+	Name              string `redis:"name" form:"name" validate:"required"`
+	Command           string `redis:"command" form:"command" validate:"required"`
+	StartInterval     string `redis:"start_interval" form:"start_interval" validate:"omitempty,number"`
+	Minute            string `redis:"minute" form:"minute" validate:"minute-cron"`
+	Hour              string `redis:"hour" form:"hour" validate:"hour-cron"`
+	DayOfMonth        string `redis:"day_of_month" form:"day_of_month" validate:"day-of-month-cron"`
+	Month             string `redis:"month" form:"month" validate:"month-cron"`
+	Weekday           string `redis:"weekday" form:"weekday" validate:"weekday-cron"`
+	RunAtLoad         string `redis:"run_at_load" form:"run_at_load"`
+	RestartOnCrash    string `redis:"restart_on_crash" form:"restart_on_crash"`
+	StartOnMount      string `redis:"start_on_mount" form:"start_on_mount"`
+	QueueDirectories  string `redis:"queue_directories" form:"queue_directories"`
+	Environment       string `redis:"environment" form:"environment"`
+	User              string `redis:"user" form:"user"`
+	Group             string `redis:"group" form:"group"`
+	WorkingDirectory  string `redis:"working_directory" form:"working_directory"`
+	RootDirectory     string `redis:"root_directory" form:"root_directory"`
+	StandardOutPath   string `redis:"standard_out_path" form:"standard_out_path"`
+	StandardErrorPath string `redis:"standard_error_path" form:"standard_error_path"`
+	CreatedAt         string `redis:"created_at"` // written to when stored
 }
 
 func NewPlistFromForm(values url.Values) LaunchdPlist {
 	plist := LaunchdPlist{}
 	_ = decoder.Decode(&plist, values)
-	return plist
-}
-
-func NewPlistFromJSON(encoded string) LaunchdPlist {
-	plist := LaunchdPlist{}
-	_ = json.Unmarshal([]byte(encoded), &plist)
 	return plist
 }
 
@@ -174,11 +169,6 @@ func (p LaunchdPlist) EnvironmentMap() map[string]string {
 		}
 	}
 	return env
-}
-
-func (p LaunchdPlist) Encode() string {
-	encoded, _ := json.Marshal(p)
-	return base64.RawURLEncoding.EncodeToString(encoded)
 }
 
 func (p LaunchdPlist) Validate() validator.ValidationErrorsTranslations {
