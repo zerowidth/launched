@@ -1,37 +1,37 @@
 {{define "content"}}
 <article>
   <header>
-    <h2><code>{{ .Label }}.plist</code></h2>
+    <h2><code>{{ .Plist.Label }}.plist</code></h2>
   </header>
-  <p>Running <code>{{ .Command }}</code>:
+  <p>Running <code>{{ .Plist.Command }}</code>:
     <span class="actions">
-      <a href="{{ .Encode }}/edit">Edit</a> &middot;
+      <a href="{{ .Plist.Encode }}/edit">Edit</a> &middot;
       <a href="#">Copy to clipboard</a> &middot;
-      <a href="{{ .Encode }}.xml">View raw</a> &middot;
-      <a href="{{ .Encode }}/download">Download</a>
+      <a href="{{ .Plist.Encode }}.xml">View raw</a> &middot;
+      <a href="{{ .Plist.Encode }}/download">Download</a>
     </span>
   </p>
   <pre class="plist-xml">
-    <code>{{ .PlistXML }}</code>
+    <code>{{ .Plist.PlistXML }}</code>
   </pre>
 
   <p>
     To install:
-    <code id="install">curl https://launchd.| sh</code>
+    <small><code id="install">curl {{ .RootURL }}/{{.Plist.Encode}}/install | sh</code></small>
     <a href="#" class="clipboard" data-clipboard-target="#install">copy to clipboard</a> &middot;
-    <a href="{{ .Encode }}/install">View install script</a>
+    <a href="{{ .Plist.Encode }}/install">View install script</a>
   </p>
   
   <p>To install manually:</p>
   
   <pre><code>mkdir -p ~/Library/LaunchAgents
-curl -o ~/Library/LaunchAgents/<%= filename %> <%= plist_url @plist.uuid, :format => :xml %>
-launchctl load -w ~/Library/LaunchAgents/<%= filename %></code></pre>
+curl -o ~/Library/LaunchAgents/{{ .Plist.Label }}.plist {{ .RootURL }}/{{ .Plist.Encode }}.xml
+launchctl load -w ~/Library/LaunchAgents/{{ .Plist.Label }}.plist</code></pre>
   
   <p>Or, to install as root:</p>
-  <pre><code>curl -o ~/Downloads/{{ .Label }}.plist <%= plist_url @plist.uuid, :format => :xml %>
-sudo cp ~/Downloads/<%= filename %> /Library/LaunchDaemons
-sudo launchctl load -w /Library/LaunchDaemons/<%= filename %></code></pre>
+  <pre><code>curl -o ~/Downloads/{{ .Plist.Label }}.plist {{ .RootUrl }}/{{ .Plist.Encode }}.xml
+sudo cp ~/Downloads/{{ .Plist.Label }}.plist /Library/LaunchDaemons
+sudo launchctl load -w /Library/LaunchDaemons/{{ .Plist.Label }}.plist</code></pre>
 
 </article>
 {{end}}
