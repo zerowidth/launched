@@ -1,0 +1,4 @@
+dbs:
+  - path: ./migrated.db
+    replicas:
+      - url: ${LITESTREAM_REPLICA_URL}
