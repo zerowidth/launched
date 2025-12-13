@@ -4,10 +4,11 @@ primary_region = "dfw"
 
 [build]
   [build.args]
-    GO_VERSION = '1.25.1'
+    GO_VERSION = '1.25.5'
+    LITESTREAM_VERSION = '0.5.0'
 
 [processes]
-  server = "launched --listen-address 0.0.0.0:8080 --redis-address fly-launched-redis.upstash.io:6379"
+  server = "launched --listen-address 0.0.0.0:8080 --db-path /data/launched.db"
 
 [env]
   PORT = "8080"
@@ -19,3 +20,8 @@ primary_region = "dfw"
   auto_stop_machines = true
   auto_start_machines = true
   min_machines_running = 0
+  max_machines_running = 1
+
+[mounts]
+  source = "launched_data"
+  destination = "/data"

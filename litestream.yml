@@ -1,0 +1,8 @@
+dbs:
+  - path: /data/launched.db
+    replicas:
+      - url: ${LITESTREAM_REPLICA_URL}
+        retention: 168h # 7 days
+        retention-check-interval: 1h
+        snapshot-interval: 24h
+        sync-interval: 1h # not often, but enough for backups
