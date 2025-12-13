@@ -1,14 +1,10 @@
-# fly.toml app configuration file generated for launched-go on 2023-06-13T19:54:40-06:00
-#
-# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
-#
-
+# https://fly.io/docs/reference/configuration/
 app = "launched"
-primary_region = "den"
+primary_region = "dfw"
 
 [build]
-  builder = "paketobuildpacks/builder:base"
-  buildpacks = ["gcr.io/paketo-buildpacks/go"]
+  [build.args]
+    GO_VERSION = '1.25.1'
 
 [processes]
   server = "launched --listen-address 0.0.0.0:8080 --redis-address fly-launched-redis.upstash.io:6379"
