@@ -18,6 +18,10 @@ body > footer {
   overflow: auto;
 }
 
+header > p {
+  margin-bottom: 0;
+}
+
 @media (min-width: 576px) {
   body > header {
     --block-spacing-vertical: 0;
