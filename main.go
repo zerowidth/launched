@@ -29,7 +29,7 @@ var rootCmd = &cobra.Command{
 
 var development bool
 var listenAddress string
-var redisAddress string
+var dbPath string
 
 //go:embed static templates
 var assets embed.FS
@@ -40,7 +40,7 @@ var decoder *form.Decoder
 func init() {
 	rootCmd.PersistentFlags().BoolVarP(&development, "development", "d", false, "run development mode to live-reload templates and static files")
 	rootCmd.PersistentFlags().StringVarP(&listenAddress, "listen-address", "l", "localhost:3000", "address to listen on")
-	rootCmd.PersistentFlags().StringVarP(&redisAddress, "redis-address", "r", "localhost:6379", "address of redis server")
+	rootCmd.PersistentFlags().StringVar(&dbPath, "db-path", "launched.db", "path to SQLite database")
 
 	decoder = form.NewDecoder()
 }
@@ -84,7 +84,11 @@ func serve() {
 		staticFiles = assets
 	}
 
-	store := NewPlistStore(redisAddress, os.Getenv("REDIS_PASSWORD"))
+	store, err := NewPlistStore(dbPath)
+	if err != nil {
+		logger.Fatal("failed to initialize database", zap.Error(err))
+	}
+	defer store.Close()
 
 	r := chi.NewRouter()
 	r.Use(requestLogger(logger))

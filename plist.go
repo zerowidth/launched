@@ -62,26 +62,26 @@ func init() {
 // Uses string types to easily allow for empty values.
 type LaunchdPlist struct {
 	ID                string // set when loaded
-	Name              string `redis:"name" form:"name" validate:"required"`
-	Command           string `redis:"command" form:"command" validate:"required"`
-	StartInterval     string `redis:"start_interval,omitempty" form:"start_interval" validate:"omitempty,number"`
-	Minute            string `redis:"minute,omitempty" form:"minute" validate:"minute-cron"`
-	Hour              string `redis:"hour,omitempty" form:"hour" validate:"hour-cron"`
-	DayOfMonth        string `redis:"day_of_month,omitempty" form:"day_of_month" validate:"day-of-month-cron"`
-	Month             string `redis:"month,omitempty" form:"month" validate:"month-cron"`
-	Weekday           string `redis:"weekday,omitempty" form:"weekday" validate:"weekday-cron"`
-	RunAtLoad         string `redis:"run_at_load,omitempty" form:"run_at_load"`
-	RestartOnCrash    string `redis:"restart_on_crash,omitempty" form:"restart_on_crash"`
-	StartOnMount      string `redis:"start_on_mount,omitempty" form:"start_on_mount"`
-	QueueDirectories  string `redis:"queue_directories,omitempty" form:"queue_directories"`
-	Environment       string `redis:"environment,omitempty" form:"environment"`
-	User              string `redis:"user,omitempty" form:"user"`
-	Group             string `redis:"group,omitempty" form:"group"`
-	WorkingDirectory  string `redis:"working_directory,omitempty" form:"working_directory"`
-	RootDirectory     string `redis:"root_directory,omitempty" form:"root_directory"`
-	StandardOutPath   string `redis:"standard_out_path,omitempty" form:"standard_out_path"`
-	StandardErrorPath string `redis:"standard_error_path,omitempty" form:"standard_error_path"`
-	CreatedAt         string `redis:"created_at"` // written to when stored
+	Name              string `json:"name" db:"name" form:"name" validate:"required"`
+	Command           string `json:"command" db:"command" form:"command" validate:"required"`
+	StartInterval     string `json:"start_interval,omitempty" db:"start_interval" form:"start_interval" validate:"omitempty,number"`
+	Minute            string `json:"minute,omitempty" db:"minute" form:"minute" validate:"minute-cron"`
+	Hour              string `json:"hour,omitempty" db:"hour" form:"hour" validate:"hour-cron"`
+	DayOfMonth        string `json:"day_of_month,omitempty" db:"day_of_month" form:"day_of_month" validate:"day-of-month-cron"`
+	Month             string `json:"month,omitempty" db:"month" form:"month" validate:"month-cron"`
+	Weekday           string `json:"weekday,omitempty" db:"weekday" form:"weekday" validate:"weekday-cron"`
+	RunAtLoad         string `json:"run_at_load,omitempty" db:"run_at_load" form:"run_at_load"`
+	RestartOnCrash    string `json:"restart_on_crash,omitempty" db:"restart_on_crash" form:"restart_on_crash"`
+	StartOnMount      string `json:"start_on_mount,omitempty" db:"start_on_mount" form:"start_on_mount"`
+	QueueDirectories  string `json:"queue_directories,omitempty" db:"queue_directories" form:"queue_directories"`
+	Environment       string `json:"environment,omitempty" db:"environment" form:"environment"`
+	User              string `json:"user,omitempty" db:"user" form:"user"`
+	Group             string `json:"group,omitempty" db:"group" form:"group"`
+	WorkingDirectory  string `json:"working_directory,omitempty" db:"working_directory" form:"working_directory"`
+	RootDirectory     string `json:"root_directory,omitempty" db:"root_directory" form:"root_directory"`
+	StandardOutPath   string `json:"standard_out_path,omitempty" db:"standard_out_path" form:"standard_out_path"`
+	StandardErrorPath string `json:"standard_error_path,omitempty" db:"standard_error_path" form:"standard_error_path"`
+	CreatedAt         string `json:"created_at" db:"created_at"` // written to when stored
 }
 
 func NewPlistFromForm(values url.Values) LaunchdPlist {
