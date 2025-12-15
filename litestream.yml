@@ -5,4 +5,4 @@ dbs:
         retention: 168h # 7 days
         retention-check-interval: 1h
         snapshot-interval: 24h
-        sync-interval: 1h # not often, but enough for backups
+        sync-interval: 1m

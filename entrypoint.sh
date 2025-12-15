@@ -4,7 +4,7 @@ set -e
 if [ ! -f /data/launched.db ]; then
     echo "database not found locally, attempting restore from litestream..."
     if [ -n "$LITESTREAM_REPLICA_URL" ]; then
-        litestream restore -if-replica-exists -o /data/launched.db /data/launched.db || true
+        litestream restore -if-db-not-exists /data/launched.db
     fi
 fi
 
