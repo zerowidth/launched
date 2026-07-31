@@ -12,6 +12,7 @@ primary_region = "dfw"
 
 [env]
   PORT = "8080"
+  LAUNCHED_BASE_URL = "https://launched.zerowidth.com"
 
 [http_service]
   processes = ["server"]

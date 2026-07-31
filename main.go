@@ -30,6 +30,7 @@ var rootCmd = &cobra.Command{
 var development bool
 var listenAddress string
 var dbPath string
+var baseURL string
 
 // the largest input field is a list of environment variables, let's keep it reasonable
 const maxFormSize = 64 * 1024
@@ -44,6 +45,7 @@ func init() {
 	rootCmd.PersistentFlags().BoolVarP(&development, "development", "d", false, "run development mode to live-reload templates and static files")
 	rootCmd.PersistentFlags().StringVarP(&listenAddress, "listen-address", "l", "localhost:3000", "address to listen on")
 	rootCmd.PersistentFlags().StringVar(&dbPath, "db-path", "launched.db", "path to SQLite database")
+	rootCmd.PersistentFlags().StringVar(&baseURL, "base-url", os.Getenv("LAUNCHED_BASE_URL"), "public base URL of this app, e.g. https://launched.example.com (default http://<listen-address>)")
 
 	decoder = form.NewDecoder()
 }
@@ -76,9 +78,22 @@ func NewPlistForm(plist LaunchdPlist, errors validator.ValidationErrorsTranslati
 	return form
 }
 
+// plistURL is the public page for a stored plist. It's built from the
+// configured base URL rather than the request's Host and X-Forwarded-Proto
+// headers, which the client controls — this URL is recorded in the generated
+// plist, a file the user pipes into ~/Library/LaunchAgents.
+func plistURL(id string) string {
+	return fmt.Sprintf("%s/plists/%s", baseURL, id)
+}
+
 func serve() {
 	logger, _ := zap.NewDevelopment()
 	defer logger.Sync()
+
+	if baseURL == "" {
+		baseURL = "http://" + listenAddress
+	}
+	baseURL = strings.TrimSuffix(baseURL, "/")
 
 	var staticFiles fs.FS
 	if development {
@@ -127,13 +142,6 @@ func serve() {
 	})
 
 	r.Get("/plists/{id}", func(w http.ResponseWriter, r *http.Request) {
-		proto := r.Header.Get("X-Forwarded-Proto")
-		if proto == "" {
-			proto = "http"
-		}
-		host := r.Host
-		url := fmt.Sprintf("%s://%s", proto, host)
-
 		plist, ok, err := store.Load(chi.URLParam(r, "id"))
 		if err != nil {
 			logger.Error("error loading plist", zap.Error(err))
@@ -150,7 +158,7 @@ func serve() {
 			RootURL string
 		}{
 			Plist:   plist,
-			RootURL: url,
+			RootURL: baseURL,
 		}
 
 		layout := template.Must(template.ParseFS(staticFiles, "templates/layout.html", "templates/plist.html"))
@@ -158,13 +166,6 @@ func serve() {
 	})
 
 	r.Get("/plists/{id}/install", func(w http.ResponseWriter, r *http.Request) {
-		proto := r.Header.Get("X-Forwarded-Proto")
-		if proto == "" {
-			proto = "http"
-		}
-		host := r.Host
-		url := fmt.Sprintf("%s://%s", proto, host)
-
 		plist, ok, err := store.Load(chi.URLParam(r, "id"))
 		if err != nil {
 			logger.Error("error loading plist", zap.Error(err))
@@ -181,7 +182,7 @@ func serve() {
 			RootURL string
 		}{
 			Plist:   plist,
-			RootURL: url,
+			RootURL: baseURL,
 		}
 		layout := template.Must(template.ParseFS(staticFiles, "templates/install.sh"))
 		r.Header.Set("Content-Type", "text/plain; charset=utf-8")
@@ -201,7 +202,7 @@ func serve() {
 		}
 
 		w.Header().Set("Content-Type", "application/xml")
-		w.Write([]byte(plist.PlistXML()))
+		w.Write([]byte(plist.PlistXML(plistURL(plist.ID))))
 	})
 
 	r.Get("/plists/{id}/download", func(w http.ResponseWriter, r *http.Request) {
@@ -218,7 +219,7 @@ func serve() {
 
 		w.Header().Set("Content-Type", "application/xml")
 		w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%q", plist.Label()+".plist"))
-		w.Write([]byte(plist.PlistXML()))
+		w.Write([]byte(plist.PlistXML(plistURL(plist.ID))))
 	})
 
 	r.Get("/plists/{id}/edit", func(w http.ResponseWriter, r *http.Request) {

@@ -17,7 +17,7 @@ $plist_path := printf "/plists/%s" .Plist.ID -}} {{- $plist_url := printf
     </small>
   </p>
 
-  <pre class="plist-xml"><code id="xml">{{ .Plist.PlistXML }}</code></pre>
+  <pre class="plist-xml"><code id="xml">{{ .Plist.PlistXML $plist_url }}</code></pre>
 
   <p>
     To install:

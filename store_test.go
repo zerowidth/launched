@@ -80,7 +80,7 @@ func TestPlistStore_RoundTripsEveryField(t *testing.T) {
 
 	// environment is split on CRLF, which JSON must not normalize away
 	assert.Equal(t, map[string]string{"PATH": "/usr/bin", "FOO": "bar"}, out.EnvironmentMap())
-	assert.Equal(t, in.PlistXML(), out.PlistXML())
+	assert.Equal(t, in.PlistXML(""), out.PlistXML(""))
 }
 
 func TestPlistStore_LoadSetsID(t *testing.T) {
