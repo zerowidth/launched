@@ -11,9 +11,11 @@ var rangeRegex = regexp.MustCompile(`^(\d+)-(\d+)$`)
 var starRegex = regexp.MustCompile(`^\*(/(\d+))?$`)
 var numberRegex = regexp.MustCompile(`^\d+$`)
 
+// Limit the cartesian product of cron fields
+const MaxCronIntervals = 1440
+
 func ValidateCronExpression(input string, min int, max int) bool {
-	parts := strings.Split(input, ",")
-	for _, part := range parts {
+	for part := range strings.SplitSeq(input, ",") {
 		switch {
 		case rangeRegex.MatchString(part):
 			matches := rangeRegex.FindStringSubmatch(part)
@@ -21,7 +23,10 @@ func ValidateCronExpression(input string, min int, max int) bool {
 				return false
 			}
 		case starRegex.MatchString(part):
-			// fine i guess, if divisor is greater than max it'll still hit interval 0
+			matches := starRegex.FindStringSubmatch(part)
+			if matches[2] != "" && !validDivisor(matches[2]) {
+				return false
+			}
 		case numberRegex.MatchString(part):
 			if !validNumber(part, min, max) {
 				return false
@@ -44,6 +49,11 @@ func validNumber(input string, min, max int) bool {
 	return true
 }
 
+func validDivisor(input string) bool {
+	divisor, err := strconv.Atoi(input)
+	return err == nil && divisor > 0
+}
+
 type intervalChoices struct {
 	name      string
 	intervals []int
@@ -56,13 +66,16 @@ type choice struct {
 
 // assume the input is valid
 func GenerateCronIntervals(minute, hour, day_of_month, month, weekday string) []map[string]int {
-	intervals := combineIntervals([]intervalChoices{
-		{"Minute", cronIntervals(minute, 0, 59)},
-		{"Hour", cronIntervals(hour, 0, 23)},
-		{"Day", cronIntervals(day_of_month, 1, 31)},
-		{"Month", cronIntervals(month, 1, 12)},
-		{"Weekday", cronIntervals(weekday, 0, 6)},
-	})
+	choices := cronIntervalChoices(minute, hour, day_of_month, month, weekday)
+
+	// Validation rejects anything over the limit on create, but a plist stored
+	// before the limit existed would otherwise allocate its way to an OOM every
+	// time it's rendered.
+	if countCronIntervals(choices) > MaxCronIntervals {
+		return nil
+	}
+
+	intervals := combineIntervals(choices)
 
 	sum := []map[string]int{}
 	for _, interval := range intervals {
@@ -76,16 +89,53 @@ func GenerateCronIntervals(minute, hour, day_of_month, month, weekday string) []
 	return sum
 }
 
+func cronIntervalChoices(minute, hour, day_of_month, month, weekday string) []intervalChoices {
+	return []intervalChoices{
+		{"Minute", cronIntervals(minute, 0, 59)},
+		{"Hour", cronIntervals(hour, 0, 23)},
+		{"Day", cronIntervals(day_of_month, 1, 31)},
+		{"Month", cronIntervals(month, 1, 12)},
+		{"Weekday", cronIntervals(weekday, 0, 6)},
+	}
+}
+
+// CronIntervalCount reports how many calendar intervals these expressions would
+// generate without building them.
+func CronIntervalCount(minute, hour, day_of_month, month, weekday string) int {
+	return countCronIntervals(cronIntervalChoices(minute, hour, day_of_month, month, weekday))
+}
+
+func countCronIntervals(choices []intervalChoices) int {
+	count := 0
+	for _, choice := range choices {
+		if len(choice.intervals) == 0 {
+			continue
+		}
+		if count == 0 {
+			count = len(choice.intervals)
+		} else {
+			count *= len(choice.intervals)
+		}
+	}
+	return count
+}
+
 func cronIntervals(cron string, min, max int) []int {
 	set := map[int]struct{}{}
 
-	parts := strings.Split(cron, ",")
-	for _, part := range parts {
+	for part := range strings.SplitSeq(cron, ",") {
 		switch {
 		case rangeRegex.MatchString(part):
 			matches := rangeRegex.FindStringSubmatch(part)
 			start, _ := strconv.Atoi(matches[1])
 			end, _ := strconv.Atoi(matches[2])
+			// clamp to min/max to prevent invalid intervals
+			if start < min {
+				start = min
+			}
+			if end > max {
+				end = max
+			}
 			for i := start; i <= end; i++ {
 				set[i] = struct{}{}
 			}
@@ -95,7 +145,8 @@ func cronIntervals(cron string, min, max int) []int {
 			if matches[2] != "" {
 				divisor, _ = strconv.Atoi(matches[2])
 			}
-			if divisor == 1 {
+			// `*` and `*/1` are unconstrained; `*/0` would divide by zero
+			if divisor < 2 {
 				continue
 			}
 			for i := min; i <= max; i++ {
@@ -104,7 +155,10 @@ func cronIntervals(cron string, min, max int) []int {
 				}
 			}
 		case numberRegex.MatchString(part):
-			number, _ := strconv.Atoi(part)
+			number, err := strconv.Atoi(part)
+			if err != nil || number < min || number > max {
+				continue
+			}
 			set[number] = struct{}{}
 		}
 	}

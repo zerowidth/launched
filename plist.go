@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"net/url"
 	"regexp"
 	"strconv"
@@ -24,6 +25,7 @@ func init() {
 	validate.RegisterValidation("day-of-month-cron", validateDayOfMonthCron)
 	validate.RegisterValidation("month-cron", validateMonthCron)
 	validate.RegisterValidation("weekday-cron", validateWeekdayCron)
+	validate.RegisterStructValidation(validateCronIntervalCount, LaunchdPlist{})
 
 	en := en.New()
 	uni := ut.New(en, en)
@@ -40,6 +42,14 @@ func init() {
 				return t
 			})
 	}
+	validate.RegisterTranslation("cron-intervals", translate,
+		func(ut ut.Translator) error {
+			return ut.Add("cron-intervals", fmt.Sprintf("combined with the other fields, this schedule generates more than %d calendar intervals", MaxCronIntervals), true)
+		},
+		func(ut ut.Translator, fe validator.FieldError) string {
+			t, _ := ut.T("cron-intervals", fe.Field())
+			return t
+		})
 	validate.RegisterTranslation("required", translate,
 		func(ut ut.Translator) error {
 			return ut.Add("required", "is required", true)
@@ -187,6 +197,19 @@ func (p LaunchdPlist) Validate() validator.ValidationErrorsTranslations {
 	}
 	validationErrors := err.(validator.ValidationErrors)
 	return validationErrors.Translate(translate)
+}
+
+// It's the cartesian product of the cron fields, not any single field, that can
+// blow up, so this has to be checked across the whole struct. The error is
+// reported on Minute since that's the field most likely to be over-broad.
+func validateCronIntervalCount(sl validator.StructLevel) {
+	p, ok := sl.Current().Interface().(LaunchdPlist)
+	if !ok {
+		return
+	}
+	if CronIntervalCount(p.Minute, p.Hour, p.DayOfMonth, p.Month, p.Weekday) > MaxCronIntervals {
+		sl.ReportError(p.Minute, "Minute", "Minute", "cron-intervals", "")
+	}
 }
 
 func validateMinuteCron(fl validator.FieldLevel) bool {
