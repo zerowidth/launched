@@ -41,5 +41,13 @@ launchctl load -w ~/Library/LaunchAgents/'{{ $filename }}'</code></pre>
   <pre><code>curl -fsS -o ~/Downloads/'{{ $filename }}' '{{ $plist_url }}.xml'
 sudo cp ~/Downloads/'{{ $filename }}' /Library/LaunchDaemons
 sudo launchctl load -w /Library/LaunchDaemons/'{{ $filename }}'</code></pre>
+
+  <p class="privacy-note">
+    <small>
+      This plist may be stored indefinitely, and anyone with this link can read
+      all of it. Treat the link as public, and don't share it if the command or
+      environment contains anything sensitive.
+    </small>
+  </p>
 </article>
 {{end}}

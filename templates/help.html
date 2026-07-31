@@ -78,8 +78,20 @@ sudo launchctl load -w /Library/LaunchDaemons/launched.your_script.plist
   <p>
     This application has no way of listing the plists that have been created so
     far, and each plist is identified by a unique identifier rather than an
-    incrementing id to prevent enumeration. Still, you should ensure that you
-    keep private data out of the plists if possible.
+    incrementing id to prevent enumeration.
+  </p>
+
+  <p>
+    <strong>Anyone who has the link to a plist can read all of it</strong>,
+    including its command and environment variables. Plists may be stored
+    indefinitely. Keep passwords, API tokens, and other secrets out of them.
+    Have your command read those from a file or the keychain at runtime instead.
+  </p>
+
+  <p>
+    Given this is a free service, there's also no guarantee of durability.
+    Plists may be deleted at any time, so keep your own copy of any plist you
+    generate.
   </p>
 
   <p>
