@@ -1,4 +1,4 @@
-ARG GO_VERSION=1.25.5
+ARG GO_VERSION=1.26.5
 FROM golang:${GO_VERSION}-trixie AS builder
 
 WORKDIR /usr/src/app
