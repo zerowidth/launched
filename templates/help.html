@@ -5,10 +5,12 @@
   <p>
     Launchd was designed at Apple as a replacement for init.d, crond, rc.d, etc.
     Launchd not only provides everything that cron does, it can do so with even
-    more flexibility and power. The only downside is that the <a
-      href="https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html">XML
-      configuration files required by launchd</a> are nowhere near as simple to
-    write.
+    more flexibility and power. The only downside is that the
+    <a
+      href="https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html"
+      >XML configuration files required by launchd</a
+    >
+    are nowhere near as simple to write.
   </p>
 
   <p>
@@ -31,8 +33,8 @@ launchctl load -w ~/Library/LaunchAgents/launched.your_script.plist
 </code></pre>
 
   <p>
-    If your plist needs to run as a different user, including root, you'll need to
-    install it to the systemwide launch daemons folder instead:
+    If your plist needs to run as a different user, including root, you'll need
+    to install it to the systemwide launch daemons folder instead:
   </p>
 
   <pre><code># Put your plist in the system directory
@@ -49,7 +51,9 @@ sudo launchctl load -w /Library/LaunchDaemons/launched.your_script.plist
 
   <h3>Uninstalling a plist</h3>
 
-  <p>Uninstalling a plist is just as easy as installing it. For a user plist:</p>
+  <p>
+    Uninstalling a plist is just as easy as installing it. For a user plist:
+  </p>
   <pre><code>launchctl unload -w ~/Library/LaunchAgents/launched.your_script.plist</code></pre>
 
   <p>And for root,</p>
@@ -59,30 +63,28 @@ sudo launchctl load -w /Library/LaunchDaemons/launched.your_script.plist
 
   <p>
     If your plist doesn't seem to be running correctly, you can debug it by
-    looking at the logs in console.app. Fortunately, launchd prefixes any activity
-    with the label defined in your plist. So, continuing with the above example,
-    search for <code>launched.your_script</code> to
-    find any log entries related to your job.
+    looking at the logs in console.app. Fortunately, launchd prefixes any
+    activity with the label defined in your plist. So, continuing with the above
+    example, search for <code>launched.your_script</code> to find any log
+    entries related to your job.
   </p>
 
   <h3>Isn't there a tool to make this easier?</h3>
 
-  <p>
-    Yes. <code>brew install lunchy &amp;&amp; lunchy --help</code>
-  </p>
+  <p>Yes. <code>brew install lunchy &amp;&amp; lunchy --help</code></p>
 
   <h3>Privacy and Security</h3>
 
   <p>
     This application has no way of listing the plists that have been created so
-    far, and each plist is identified by a unique identifier rather than an incrementing id to
-    prevent enumeration. Still, you should ensure that you keep private data out
-    of the plists if possible.
+    far, and each plist is identified by a unique identifier rather than an
+    incrementing id to prevent enumeration. Still, you should ensure that you
+    keep private data out of the plists if possible.
   </p>
 
   <p>
-    To prevent accidental or malicious changes, it's not possible to edit a plist.
-    Instead, each new version of a plist has a different identifier.
+    To prevent accidental or malicious changes, it's not possible to edit a
+    plist. Instead, each new version of a plist has a different identifier.
   </p>
 
   <h3>Learn More</h3>
@@ -90,6 +92,5 @@ sudo launchctl load -w /Library/LaunchDaemons/launched.your_script.plist
   <pre><code>man launchd
 man launchd.plist</code></pre>
 </article>
-
 
 {{ end }}
