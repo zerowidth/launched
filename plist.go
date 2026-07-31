@@ -152,9 +152,18 @@ func (p LaunchdPlist) PlistXML() string {
 	return buf.String()
 }
 
+// Anything outside this set is collapsed into a single underscore by Label.
+var labelUnsafe = regexp.MustCompile(`[^a-z0-9._-]+`)
+
+// Label is the launchd label for the plist, and doubles as the filename in the
+// install instructions. Restrict to a conservative character set for safety.
 func (p LaunchdPlist) Label() string {
-	whitespace := regexp.MustCompile(`\s+`)
-	return "launched." + whitespace.ReplaceAllString(strings.ToLower(p.Name), "_")
+	name := labelUnsafe.ReplaceAllString(strings.ToLower(p.Name), "_")
+	name = strings.Trim(name, "_")
+	if name == "" {
+		name = "plist"
+	}
+	return "launched." + name
 }
 
 func (p LaunchdPlist) CronIntervals() []map[string]int {

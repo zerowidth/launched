@@ -209,7 +209,7 @@ func serve() {
 		}
 
 		w.Header().Set("Content-Type", "application/xml")
-		w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%s.plist", plist.Label()))
+		w.Header().Set("Content-Disposition", fmt.Sprintf("attachment; filename=%q", plist.Label()+".plist"))
 		w.Write([]byte(plist.PlistXML()))
 	})
 
