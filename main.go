@@ -31,6 +31,9 @@ var development bool
 var listenAddress string
 var dbPath string
 
+// the largest input field is a list of environment variables, let's keep it reasonable
+const maxFormSize = 64 * 1024
+
 //go:embed static templates
 var assets embed.FS
 
@@ -92,6 +95,7 @@ func serve() {
 
 	r := chi.NewRouter()
 	r.Use(requestLogger(logger))
+	r.Use(middleware.Recoverer)
 
 	r.Get("/", func(w http.ResponseWriter, r *http.Request) {
 		form := PlistForm{}
@@ -100,7 +104,11 @@ func serve() {
 	})
 
 	r.Post("/plists", func(w http.ResponseWriter, r *http.Request) {
-		r.ParseForm()
+		r.Body = http.MaxBytesReader(w, r.Body, maxFormSize)
+		if err := r.ParseForm(); err != nil {
+			http.Error(w, "could not parse form", http.StatusBadRequest)
+			return
+		}
 		plist := NewPlistFromForm(r.PostForm)
 		errors := plist.Validate()
 		if errors != nil {
@@ -241,8 +249,18 @@ func serve() {
 
 	r.Handle("/static/*", http.FileServer(http.FS(staticFiles)))
 
+	server := &http.Server{
+		Addr:              listenAddress,
+		Handler:           r,
+		ReadHeaderTimeout: 5 * time.Second,
+		ReadTimeout:       15 * time.Second,
+		WriteTimeout:      30 * time.Second,
+		IdleTimeout:       60 * time.Second,
+		MaxHeaderBytes:    1 << 16, // 64KB
+	}
+
 	logger.Info("starting server", zap.String("listen-address", listenAddress), zap.Bool("development", development))
-	if err := http.ListenAndServe(listenAddress, r); err != nil {
+	if err := server.ListenAndServe(); err != nil {
 		logger.Error("server error", zap.Error(err))
 	}
 }
